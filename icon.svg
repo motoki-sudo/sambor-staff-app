@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1a3a2a"/>
+  <g fill="#8a6820">
+    <polygon points="256,56 240,121 272,121"/>
+    <polygon points="364,118 317,171 343,151"/>
+    <polygon points="416,256 361,240 361,272"/>
+    <polygon points="364,395 343,341 317,361"/>
+    <polygon points="256,446 240,391 272,391"/>
+    <polygon points="148,395 195,341 169,361"/>
+    <polygon points="96,256 151,240 151,272"/>
+    <polygon points="148,118 195,151 169,171"/>
+  </g>
+  <ellipse cx="256" cy="256" rx="105" ry="135" fill="#c9a84c"/>
+  <ellipse cx="220" cy="215" rx="28" ry="40" fill="rgba(255,255,255,0.22)"/>
+  <line x1="256" y1="121" x2="262" y2="76" stroke="#5c3d11" stroke-width="12" stroke-linecap="round"/>
+  <line x1="262" y1="76" x2="294" y2="50" stroke="#2d6a1b" stroke-width="10" stroke-linecap="round"/>
+</svg>

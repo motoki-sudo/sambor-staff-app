@@ -1,0 +1,17 @@
+{
+  "name": "Sambor Village Hotel",
+  "short_name": "Sambor Staff",
+  "description": "Restaurant guest log",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f2218",
+  "theme_color": "#1a3a2a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
