@@ -8,17 +8,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Inter:wght@400;500;600&display=swap');
 
   :root {
-    --jungle:   #1a3a2a;
-    --deep:     #0f2218;
-    --gold:     #c9a84c;
-    --gold-lt:  #e8c97a;
-    --cream:    #f5f0e8;
-    --cream-dk: #e8e0d0;
-    --text:     #1a1a1a;
-    --muted:    #6b7a6e;
-    --walkin:   #2d6a4f;
-    --staying:  #1e4d6b;
-    --radius:   14px;
+    --jungle:  #1a3a2a;
+    --deep:    #0f2218;
+    --gold:    #c9a84c;
+    --gold-lt: #e8c97a;
+    --cream:   #f5f0e8;
+    --muted:   #6b7a6e;
+    --walkin:  #2d6a4f;
+    --staying: #1e4d6b;
+    --radius:  14px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -33,7 +31,6 @@
     align-items: center;
   }
 
-  /* ── Header ── */
   header {
     width: 100%;
     max-width: 480px;
@@ -42,43 +39,19 @@
     justify-content: space-between;
     align-items: flex-start;
   }
-
-  .hotel-name {
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    color: var(--gold);
-    letter-spacing: .12em;
-    line-height: 1.5;
-  }
-  .hotel-sub {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
+  .hotel-name { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: .12em; line-height: 1.5; }
+  .hotel-sub  { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
 
   .lang-toggle {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: background .2s;
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: background .2s;
   }
   .lang-toggle:active { background: rgba(201,168,76,.15); }
 
-  /* ── Main card ── */
-  main {
-    width: 100%;
-    max-width: 480px;
-    padding: 16px 20px 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  main { width: 100%; max-width: 480px; padding: 16px 20px 40px; }
+
+  .view { display: flex; flex-direction: column; gap: 16px; }
 
   .card {
     background: rgba(255,255,255,.06);
@@ -88,345 +61,173 @@
   }
 
   .section-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
+    font-size: 10px; font-weight: 600; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
   }
 
-  /* ── Staff selector ── */
-  .staff-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+  /* ── Tree ── */
+  .tree-card svg { width: 100%; height: auto; display: block; }
+  .tree-stats {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding-top: 12px; border-top: 1px solid rgba(201,168,76,.12); margin-top: 10px;
   }
-
-  .staff-btn {
-    background: rgba(255,255,255,.05);
-    border: 1.5px solid rgba(255,255,255,.12);
-    border-radius: 10px;
-    padding: 10px 8px;
-    color: var(--cream);
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all .15s;
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .staff-btn .staff-count {
-    font-size: 10px;
-    color: var(--gold-lt);
-    font-weight: 600;
-  }
-  .staff-btn.selected {
-    background: rgba(201,168,76,.18);
-    border-color: var(--gold);
-    color: var(--gold-lt);
-  }
-  .staff-btn:active { transform: scale(.97); }
+  .tree-progress-row { display: flex; align-items: baseline; gap: 3px; }
+  .tree-current  { font-size: 40px; font-weight: 700; color: var(--gold-lt); line-height: 1; font-variant-numeric: tabular-nums; }
+  .tree-max      { font-size: 18px; color: var(--muted); font-weight: 500; }
+  .tree-num-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .tree-breakdown { display: flex; gap: 14px; font-size: 13px; color: rgba(245,240,232,.7); margin-top: 2px; }
+  .tree-stage { font-size: 12px; color: var(--gold); margin-top: 4px; font-weight: 500; }
 
   /* ── Guest type ── */
-  .type-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
+  .type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .type-btn {
-    border: none;
-    border-radius: 12px;
-    padding: 18px 12px;
-    font-size: 22px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all .15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
+    border: none; border-radius: 12px; padding: 18px 12px; font-size: 22px;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
   }
-  .type-btn .type-label {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-    text-align: center;
-  }
-  .type-btn .type-sub {
-    font-size: 10px;
-    opacity: .7;
-    text-align: center;
-    line-height: 1.4;
-  }
-  .type-btn.walkin {
-    background: var(--walkin);
-    color: #a8e6c4;
-  }
-  .type-btn.staying {
-    background: var(--staying);
-    color: #a8d0e8;
-  }
-  .type-btn.selected {
-    outline: 2.5px solid var(--gold);
-    outline-offset: 2px;
-  }
+  .type-btn .type-label { font-size: 13px; font-weight: 600; line-height: 1.3; text-align: center; }
+  .type-btn .type-sub   { font-size: 10px; opacity: .7; text-align: center; line-height: 1.4; }
+  .type-btn.walkin  { background: var(--walkin);  color: #a8e6c4; }
+  .type-btn.staying { background: var(--staying); color: #a8d0e8; }
+  .type-btn.selected { outline: 2.5px solid var(--gold); outline-offset: 2px; }
   .type-btn:active { transform: scale(.96); }
 
-  /* ── Room selector ── */
-  .room-section {
-    display: none;
-  }
+  /* ── Room ── */
+  .room-section { display: none; }
   .room-section.visible { display: block; }
-
-  .room-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 7px;
-    margin-top: 4px;
-  }
-
+  .room-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-top: 4px; }
   .room-btn {
-    background: rgba(255,255,255,.06);
-    border: 1.5px solid rgba(255,255,255,.12);
-    border-radius: 8px;
-    padding: 10px 4px;
-    color: var(--cream);
-    font-size: 13px;
-    font-weight: 500;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all .15s;
-    text-align: center;
+    background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12);
+    border-radius: 8px; padding: 10px 4px; color: var(--cream); font-size: 13px;
+    font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; text-align: center;
   }
-  .room-btn.selected {
-    background: rgba(30,77,107,.6);
-    border-color: #6ab0d4;
-    color: #a8d0e8;
-  }
+  .room-btn.selected { background: rgba(30,77,107,.6); border-color: #6ab0d4; color: #a8d0e8; }
   .room-btn:active { transform: scale(.95); }
 
-  /* ── Guest count ── */
-  .count-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .count-ctrl {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
+  /* ── Count ── */
+  .count-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .count-ctrl { display: flex; align-items: center; gap: 14px; }
   .count-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(201,168,76,.4);
-    background: transparent;
-    color: var(--gold-lt);
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    transition: background .15s;
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(201,168,76,.4);
+    background: transparent; color: var(--gold-lt); font-size: 22px; cursor: pointer;
+    transition: background .15s; font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; justify-content: center;
   }
   .count-btn:active { background: rgba(201,168,76,.15); }
-
-  .count-num {
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--gold-lt);
-    min-width: 40px;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
+  .count-num { font-size: 32px; font-weight: 600; color: var(--gold-lt); min-width: 40px; text-align: center; font-variant-numeric: tabular-nums; }
 
   /* ── Submit ── */
   .submit-btn {
-    width: 100%;
-    padding: 18px;
+    width: 100%; padding: 18px;
     background: linear-gradient(135deg, var(--gold) 0%, #a87c2a 100%);
-    border: none;
-    border-radius: var(--radius);
-    color: var(--deep);
-    font-size: 16px;
-    font-weight: 700;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: opacity .15s, transform .1s;
-    letter-spacing: .03em;
+    border: none; border-radius: var(--radius); color: var(--deep);
+    font-size: 16px; font-weight: 700; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: opacity .15s, transform .1s; letter-spacing: .03em;
   }
-  .submit-btn:disabled {
-    opacity: .35;
-    cursor: not-allowed;
-  }
+  .submit-btn:disabled { opacity: .35; cursor: not-allowed; }
   .submit-btn:not(:disabled):active { transform: scale(.98); }
 
-  /* ── Toast / celebration ── */
-  .toast {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    pointer-events: none;
-  }
-  .toast-inner {
-    margin-top: 24px;
-    background: var(--deep);
-    border: 1.5px solid var(--gold);
-    border-radius: 16px;
-    padding: 14px 24px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--gold-lt);
-    transform: translateY(-80px);
-    opacity: 0;
-    transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s;
-    text-align: center;
-    max-width: 320px;
-    width: calc(100% - 40px);
-  }
-  .toast.show .toast-inner {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  /* ── Leaderboard ── */
-  .lb-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .lb-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: rgba(255,255,255,.04);
-    border-radius: 10px;
-  }
-
-  .lb-rank {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--muted);
-    width: 20px;
-    text-align: center;
-  }
-  .lb-rank.top { color: var(--gold); font-size: 16px; }
-
-  .lb-name { flex: 1; font-size: 14px; font-weight: 500; }
-
-  .lb-bar-wrap {
-    flex: 2;
-    height: 6px;
-    background: rgba(255,255,255,.1);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .lb-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 100%);
-    border-radius: 3px;
-    transition: width .5s ease;
-  }
-
-  .lb-count {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--gold-lt);
-    min-width: 28px;
-    text-align: right;
-  }
-
-  /* ── Recent log ── */
-  .log-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 180px;
-    overflow-y: auto;
-  }
+  /* ── Log ── */
+  .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
   .log-item {
-    font-size: 12px;
-    color: rgba(245,240,232,.6);
-    padding: 6px 10px;
-    background: rgba(255,255,255,.03);
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+    font-size: 12px; color: rgba(245,240,232,.6); padding: 6px 10px;
+    background: rgba(255,255,255,.03); border-radius: 8px;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
   }
-  .log-badge {
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .log-badge.walkin { background: rgba(45,106,79,.5); color: #a8e6c4; }
-  .log-badge.staying { background: rgba(30,77,107,.5); color: #a8d0e8; }
+  .log-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+  .log-badge.walkin  { background: rgba(45,106,79,.5);  color: #a8e6c4; }
+  .log-badge.staying { background: rgba(30,77,107,.5);  color: #a8d0e8; }
+  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
 
-  .empty-state {
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-    padding: 20px 0;
+  /* ── Admin link (main bottom) ── */
+  .admin-link-row { display: flex; justify-content: center; padding-top: 4px; }
+  .admin-link {
+    background: transparent; border: none; color: rgba(245,240,232,.18);
+    font-size: 11px; font-family: 'Inter', sans-serif; cursor: pointer;
+    padding: 6px 12px; letter-spacing: .05em;
   }
 
-  /* ── Reset ── */
-  .reset-row {
-    display: flex;
-    justify-content: center;
-    padding-top: 4px;
+  /* ── Admin view ── */
+  .back-btn {
+    background: transparent; border: none; color: var(--gold);
+    font-size: 14px; font-family: 'Inter', sans-serif; cursor: pointer;
+    padding: 4px 0; display: flex; align-items: center; gap: 6px; align-self: flex-start;
   }
-  .reset-btn {
-    background: transparent;
-    border: none;
-    color: rgba(245,240,232,.25);
-    font-size: 11px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    padding: 6px 12px;
-    text-decoration: underline;
+  .back-btn:active { opacity: .7; }
+
+  /* ── Stats (admin) ── */
+  .stats-tabs { display: flex; gap: 5px; margin-bottom: 14px; }
+  .stats-tab {
+    flex: 1; padding: 7px 4px; border: 1px solid rgba(201,168,76,.2); border-radius: 8px;
+    background: transparent; color: var(--muted); font-size: 11px; font-weight: 500;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; text-align: center;
   }
+  .stats-tab.active { background: rgba(201,168,76,.15); border-color: var(--gold); color: var(--gold-lt); }
+  .stats-tab:active { opacity: .7; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-box {
+    background: rgba(255,255,255,.04); border-radius: 10px; padding: 12px 6px 10px;
+    text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .stat-icon { font-size: 18px; margin-bottom: 2px; }
+  .stat-num  { font-size: 22px; font-weight: 700; color: var(--gold-lt); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .stat-sub  { font-size: 10px; color: var(--muted); min-height: 14px; }
+  .stat-lbl  { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+  /* ── Adjust controls (admin) ── */
+  .adj-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .adj-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .adj-row:first-child { padding-top: 0; }
+  .adj-label { font-size: 13px; color: rgba(245,240,232,.7); }
+  .adj-ctrl  { display: flex; align-items: center; gap: 12px; }
+  .adj-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(201,168,76,.4);
+    background: transparent; color: var(--gold-lt); font-size: 18px; cursor: pointer;
+    font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .adj-btn:active { background: rgba(201,168,76,.15); }
+  .adj-val { font-size: 20px; font-weight: 700; color: var(--gold-lt); min-width: 32px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  /* ── Danger button (admin) ── */
+  .danger-btn {
+    width: 100%; padding: 14px; background: transparent;
+    border: 1px solid rgba(255,100,100,.3); border-radius: var(--radius);
+    color: rgba(255,160,160,.7); font-size: 14px; font-weight: 500;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: background .15s;
+  }
+  .danger-btn:active { background: rgba(255,100,100,.1); }
+
+  /* ── Toast ── */
+  .toast { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; pointer-events: none; }
+  .toast-inner {
+    margin-top: 24px; background: var(--deep); border: 1.5px solid var(--gold);
+    border-radius: 16px; padding: 14px 24px; font-size: 15px; font-weight: 600;
+    color: var(--gold-lt); transform: translateY(-80px); opacity: 0;
+    transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s;
+    text-align: center; max-width: 320px; width: calc(100% - 40px);
+  }
+  .toast.show .toast-inner { transform: translateY(0); opacity: 1; }
 
   /* ── Confetti ── */
-  .confetti-wrap {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 200;
-  }
-  .confetti-piece {
-    position: absolute;
-    width: 8px; height: 8px;
-    top: -10px;
-    border-radius: 2px;
-    animation: confetti-fall linear forwards;
-  }
-  @keyframes confetti-fall {
-    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
+  .confetti-wrap { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 200; }
+  .confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; border-radius: 2px; animation: confetti-fall linear forwards; }
+  @keyframes confetti-fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
-  /* ── Scrollbar ── */
+  .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+  .log-list--admin { max-height: 340px; }
   .log-list::-webkit-scrollbar { width: 4px; }
   .log-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 2px; }
+
+  .log-del {
+    background: transparent; border: none; color: rgba(255,100,100,.35);
+    font-size: 16px; line-height: 1; cursor: pointer; padding: 2px 4px;
+    flex-shrink: 0; transition: color .15s; font-family: 'Inter', sans-serif;
+  }
+  .log-del:active { color: rgba(255,100,100,.9); }
 </style>
 </head>
 <body>
@@ -441,400 +242,668 @@
 
 <main>
 
-  <!-- Staff -->
-  <div class="card">
-    <div class="section-label" id="lbl-staff">Select Your Name</div>
-    <div class="staff-grid" id="staffGrid"></div>
-  </div>
+  <!-- ═══ MAIN VIEW ═══ -->
+  <div id="viewMain" class="view">
 
-  <!-- Guest type -->
-  <div class="card">
-    <div class="section-label" id="lbl-type">Guest Type</div>
-    <div class="type-row">
-      <button class="type-btn walkin" onclick="selectType('walkin')" id="btn-walkin">
-        🚶
-        <div>
-          <div class="type-label" id="lbl-walkin-btn">Walk-in</div>
-          <div class="type-sub" id="lbl-walkin-sub">Visiting guest</div>
+    <!-- Durian Tree -->
+    <div class="card tree-card">
+      <div class="section-label" id="lbl-tree">Durian Tree</div>
+      <svg id="treeSvg" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="tree-stats">
+        <div class="tree-progress-row">
+          <span class="tree-current" id="treeCurrent">0</span>
+          <span class="tree-max">/100</span>
         </div>
-      </button>
-      <button class="type-btn staying" onclick="selectType('staying')" id="btn-staying">
-        🏨
-        <div>
-          <div class="type-label" id="lbl-staying-btn">Hotel Guest</div>
-          <div class="type-sub" id="lbl-staying-sub">Staying here</div>
+        <div class="tree-num-label" id="treeNumLabel">Tree #1</div>
+        <div class="tree-breakdown">
+          <span>🚶 <span id="treeWalkin">0</span></span>
+          <span style="color:var(--muted)">·</span>
+          <span>🏨 <span id="treeHotel">0</span></span>
         </div>
-      </button>
-    </div>
-  </div>
-
-  <!-- Room selector -->
-  <div class="card room-section" id="roomSection">
-    <div class="section-label" id="lbl-room">Room Number</div>
-    <div class="room-grid" id="roomGrid"></div>
-  </div>
-
-  <!-- Guest count -->
-  <div class="card">
-    <div class="section-label" id="lbl-count">Number of Guests</div>
-    <div class="count-row">
-      <div class="count-ctrl">
-        <button class="count-btn" onclick="changeCount(-1)">−</button>
-        <div class="count-num" id="countNum">1</div>
-        <button class="count-btn" onclick="changeCount(1)">+</button>
-      </div>
-      <div style="font-size:12px; color:var(--muted); text-align:right; line-height:1.6;" id="lbl-count-hint">
-        How many guests<br>did you serve?
+        <div class="tree-stage" id="treeStage"></div>
       </div>
     </div>
-  </div>
 
-  <!-- Submit -->
-  <button class="submit-btn" id="submitBtn" disabled onclick="handleSubmit()" id="lbl-submit">
-    Record Service
-  </button>
-
-  <!-- Leaderboard -->
-  <div class="card">
-    <div class="section-label" id="lbl-lb">Today's Leaderboard</div>
-    <div class="lb-list" id="lbList">
-      <div class="empty-state" id="lbl-empty">No records yet. Be the first! 🌟</div>
+    <!-- Guest type -->
+    <div class="card">
+      <div class="section-label" id="lbl-type">Guest Type</div>
+      <div class="type-row">
+        <button class="type-btn walkin"  onclick="selectType('walkin')"  id="btn-walkin">
+          🚶
+          <div>
+            <div class="type-label" id="lbl-walkin-btn">Walk-in</div>
+            <div class="type-sub"   id="lbl-walkin-sub">Visiting guest</div>
+          </div>
+        </button>
+        <button class="type-btn staying" onclick="selectType('staying')" id="btn-staying">
+          🏨
+          <div>
+            <div class="type-label" id="lbl-staying-btn">Hotel Guest</div>
+            <div class="type-sub"   id="lbl-staying-sub">Staying here</div>
+          </div>
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Recent log -->
-  <div class="card">
-    <div class="section-label" id="lbl-log">Recent Records</div>
-    <div class="log-list" id="logList">
-      <div class="empty-state" id="lbl-log-empty">Records will appear here</div>
+    <!-- Room -->
+    <div class="card room-section" id="roomSection">
+      <div class="section-label" id="lbl-room">Room Number</div>
+      <div class="room-grid" id="roomGrid"></div>
     </div>
-  </div>
 
-  <div class="reset-row">
-    <button class="reset-btn" onclick="confirmReset()" id="lbl-reset">Reset today's data</button>
-  </div>
+    <!-- Count -->
+    <div class="card">
+      <div class="section-label" id="lbl-count">Number of Guests</div>
+      <div class="count-row">
+        <div class="count-ctrl">
+          <button class="count-btn" onclick="changeCount(-1)">−</button>
+          <div class="count-num" id="countNum">1</div>
+          <button class="count-btn" onclick="changeCount(1)">+</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);text-align:right;line-height:1.6" id="lbl-count-hint">
+          How many guests<br>did you serve?
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" disabled onclick="handleSubmit()">Record Service</button>
+
+    <div class="admin-link-row">
+      <button class="admin-link" onclick="showView('admin')" id="lbl-admin">Admin</button>
+    </div>
+
+  </div><!-- /viewMain -->
+
+
+  <!-- ═══ ADMIN VIEW ═══ -->
+  <div id="viewAdmin" class="view" style="display:none">
+
+    <button class="back-btn" onclick="showView('main')" id="lbl-back">← Back</button>
+
+    <!-- Summary -->
+    <div class="card">
+      <div class="section-label" id="lbl-stats">Summary</div>
+      <div class="stats-tabs">
+        <button class="stats-tab" id="tab-today" onclick="switchTab('today')">Today</button>
+        <button class="stats-tab" id="tab-week"  onclick="switchTab('week')">This week</button>
+        <button class="stats-tab active" id="tab-month" onclick="switchTab('month')">This month</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-icon">🚶</div>
+          <div class="stat-num" id="statsWalkinGroups">0</div>
+          <div class="stat-sub" id="statsWalkinGuests"></div>
+          <div class="stat-lbl" id="lbl-stat-walkin">Walk-in</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">🏨</div>
+          <div class="stat-num" id="statsHotelGroups">0</div>
+          <div class="stat-sub" id="statsHotelGuests"></div>
+          <div class="stat-lbl" id="lbl-stat-hotel">Hotel</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">🌳</div>
+          <div class="stat-num" id="statsTrees">0</div>
+          <div class="stat-sub"></div>
+          <div class="stat-lbl" id="lbl-stat-trees">Trees</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tree adjustment -->
+    <div class="card">
+      <div class="section-label" id="lbl-adj-tree">Tree Adjustment</div>
+      <div class="adj-row">
+        <div class="adj-label" id="lbl-adj-num">Tree #</div>
+        <div class="adj-ctrl">
+          <button class="adj-btn" onclick="adjTree('num', -1)">−</button>
+          <div class="adj-val" id="adjNum">1</div>
+          <button class="adj-btn" onclick="adjTree('num', 1)">+</button>
+        </div>
+      </div>
+      <div class="adj-row">
+        <div class="adj-label" id="lbl-adj-walkin">🚶 Walk-in (current tree)</div>
+        <div class="adj-ctrl">
+          <button class="adj-btn" onclick="adjTree('walkin', -1)">−</button>
+          <div class="adj-val" id="adjWalkin">0</div>
+          <button class="adj-btn" onclick="adjTree('walkin', 1)">+</button>
+        </div>
+      </div>
+      <div class="adj-row">
+        <div class="adj-label" id="lbl-adj-hotel">🏨 Hotel (current tree)</div>
+        <div class="adj-ctrl">
+          <button class="adj-btn" onclick="adjTree('hotel', -1)">−</button>
+          <div class="adj-val" id="adjHotel">0</div>
+          <button class="adj-btn" onclick="adjTree('hotel', 1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completions adjustment -->
+    <div class="card">
+      <div class="section-label" id="lbl-adj-complete">Completed Trees</div>
+      <div class="adj-row">
+        <div class="adj-label" id="lbl-adj-complete-total">Total completions</div>
+        <div class="adj-ctrl">
+          <button class="adj-btn" onclick="adjCompletions(-1)">−</button>
+          <div class="adj-val" id="adjCompletions">0</div>
+          <button class="adj-btn" onclick="adjCompletions(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Records -->
+    <div class="card">
+      <div class="section-label" id="lbl-log">Recent Records</div>
+      <div class="log-list log-list--admin" id="logList"></div>
+    </div>
+
+    <!-- Start new tree -->
+    <button class="danger-btn" onclick="confirmNewTree()" id="lbl-new-tree">Start new tree</button>
+
+  </div><!-- /viewAdmin -->
 
 </main>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <div class="toast-inner" id="toastMsg"></div>
-</div>
-
-<!-- Confetti -->
+<div class="toast" id="toast"><div class="toast-inner" id="toastMsg"></div></div>
 <div class="confetti-wrap" id="confettiWrap"></div>
 
 <script>
 // ── i18n ──────────────────────────────────────────────
 const T = {
   en: {
-    staff:         'Select Your Name',
-    type:          'Guest Type',
-    walkinBtn:     'Walk-in',
-    walkinSub:     'Visiting guest',
-    stayingBtn:    'Hotel Guest',
-    stayingSub:    'Staying here',
-    room:          'Room Number',
-    count:         'Number of Guests',
-    countHint:     'How many guests<br>did you serve?',
-    submit:        'Record Service',
-    lb:            "Today's Leaderboard",
-    empty:         'No records yet. Be the first! 🌟',
-    log:           'Recent Records',
-    logEmpty:      'Records will appear here',
-    reset:         "Reset today's data",
-    toastWalkin:   (name, n) => `✅ ${name} — ${n} walk-in guest${n>1?'s':''}!`,
-    toastStaying:  (name, n, room) => `✅ ${name} — Room ${room}, ${n} guest${n>1?'s':''}!`,
-    toastMile:     (name, total) => `🌟 ${name} hit ${total} guests today!`,
-    resetConfirm:  "Reset all today's data?",
-    langBtn:       'ភាសាខ្មែរ',
+    tree:              'Durian Tree',
+    treeNumLabel:      n => `Tree #${n}`,
+    stageNames:        ['Waiting for guests 🌳','First durians! 🟢','Growing well 🟢','Turning yellow... 🟡','Almost ripe! 💛','Durian season! 🎉'],
+    type:              'Guest Type',
+    walkinBtn:         'Walk-in',
+    walkinSub:         'Visiting guest',
+    stayingBtn:        'Hotel Guest',
+    stayingSub:        'Staying here',
+    room:              'Room Number',
+    count:             'Number of Guests',
+    countHint:         'How many guests<br>did you serve?',
+    submit:            'Record Service',
+    log:               'Recent Records',
+    logEmpty:          'Records will appear here',
+    admin:             'Admin',
+    back:              '← Back',
+    stats:             'Summary',
+    tabToday:          'Today',
+    tabWeek:           'This week',
+    tabMonth:          'This month',
+    statWalkin:        'Walk-in',
+    statHotel:         'Hotel',
+    statTrees:         'Trees',
+    guests:            n => `${n} guest${n !== 1 ? 's' : ''}`,
+    adjTree:           'Tree Adjustment',
+    adjNum:            'Tree #',
+    adjWalkin:         '🚶 Walk-in (current tree)',
+    adjHotel:          '🏨 Hotel (current tree)',
+    adjComplete:       'Completed Trees',
+    adjCompleteTotal:  'Total completions',
+    newTree:           'Start new tree',
+    newTreeConfirm:    "Reset current tree progress?\n(All records are preserved.)",
+    deleteConfirm:     "Delete this record?\nSummary stats will update automatically.",
+    toastWalkin:       n => `✅ ${n} walk-in guest${n > 1 ? 's' : ''} recorded!`,
+    toastStaying:      (n, room) => `✅ Room ${room} — ${n} guest${n > 1 ? 's' : ''}!`,
+    toastMile:         total => `🌳 ${total} guests! Durian is ripening!`,
+    toastComplete:     n => `🎉 Tree #${n} complete! Amazing teamwork!`,
+    langBtn:           'ភាសាខ្មែរ',
   },
   km: {
-    staff:         'ជ្រើសឈ្មោះអ្នក',
-    type:          'ប្រភេទភ្ញៀវ',
-    walkinBtn:     'Walk-in',
-    walkinSub:     'ភ្ញៀវក្រៅ',
-    stayingBtn:    'ភ្ញៀវស្នាក់',
-    stayingSub:    'ស្នាក់នៅទីនេះ',
-    room:          'លេខបន្ទប់',
-    count:         'ចំនួនភ្ញៀវ',
-    countHint:     'ភ្ញៀវប៉ុន្មាននាក់<br>ដែលអ្នកបម្រើ?',
-    submit:        'កត់ត្រាការបម្រើ',
-    lb:            'តារាងចំណាត់ថ្នាក់ថ្ងៃនេះ',
-    empty:         'មិនទាន់មានទិន្នន័យ ។ ចាប់ផ្ដើម! 🌟',
-    log:           'កំណត់ត្រាថ្មីៗ',
-    logEmpty:      'ការកត់ត្រានឹងបង្ហាញនៅទីនេះ',
-    reset:         'កំណត់ឡើងវិញ',
-    toastWalkin:   (name, n) => `✅ ${name} — ភ្ញៀវ ${n} នាក់!`,
-    toastStaying:  (name, n, room) => `✅ ${name} — បន្ទប់ ${room}, ${n} នាក់!`,
-    toastMile:     (name, total) => `🌟 ${name} បានបម្រើ ${total} នាក់ថ្ងៃនេះ!`,
-    resetConfirm:  'កំណត់ទិន្នន័យឡើងវិញ?',
-    langBtn:       'English',
-  }
+    tree:              'ដើម Durian',
+    treeNumLabel:      n => `ដើមទី ${n}`,
+    stageNames:        ['រង់ចាំភ្ញៀវ 🌳','ចេញ Durian តូច 🟢','Durian ធំឡើង 🟢','ចាប់ផ្ដើមមានពណ៌ 🟡','ជិតទុំ! 💛','ទុំហើយ! 🎉'],
+    type:              'ប្រភេទភ្ញៀវ',
+    walkinBtn:         'Walk-in',
+    walkinSub:         'ភ្ញៀវក្រៅ',
+    stayingBtn:        'ភ្ញៀវស្នាក់',
+    stayingSub:        'ស្នាក់នៅទីនេះ',
+    room:              'លេខបន្ទប់',
+    count:             'ចំនួនភ្ញៀវ',
+    countHint:         'ភ្ញៀវប៉ុន្មាននាក់<br>ដែលអ្នកបម្រើ?',
+    submit:            'កត់ត្រាការបម្រើ',
+    log:               'កំណត់ត្រាថ្មីៗ',
+    logEmpty:          'ការកត់ត្រានឹងបង្ហាញនៅទីនេះ',
+    admin:             'Admin',
+    back:              '← ត្រឡប់',
+    stats:             'សង្ខេប',
+    tabToday:          'ថ្ងៃនេះ',
+    tabWeek:           'សប្ដាហ៍នេះ',
+    tabMonth:          'ខែនេះ',
+    statWalkin:        'Walk-in',
+    statHotel:         'Hotel',
+    statTrees:         'ដើម',
+    guests:            n => `${n} នាក់`,
+    adjTree:           'កែប្រែដើម',
+    adjNum:            'ដើមទី',
+    adjWalkin:         '🚶 Walk-in (ដើមបច្ចុប្បន្ន)',
+    adjHotel:          '🏨 Hotel (ដើមបច្ចុប្បន្ន)',
+    adjComplete:       'ដើមទុំ',
+    adjCompleteTotal:  'ចំនួនដើមទុំ',
+    newTree:           'ដើមថ្មី',
+    newTreeConfirm:    'Reset ដើម?\n(ទិន្នន័យ log ត្រូវបានរក្សា)',
+    deleteConfirm:     'លុបកំណត់ត្រានេះ?\nស្ថិតិនឹងត្រូវបានអាប់ដេត។',
+    toastWalkin:       n => `✅ ភ្ញៀវ ${n} នាក់!`,
+    toastStaying:      (n, room) => `✅ បន្ទប់ ${room} — ${n} នាក់!`,
+    toastMile:         total => `🌳 ភ្ញៀវ ${total} នាក់! Durian ចាប់ផ្ដើមទុំ!`,
+    toastComplete:     n => `🎉 ដើមទី ${n} ទុំហើយ!`,
+    langBtn:           'English',
+  },
 };
 
 let lang = 'en';
-function toggleLang() {
-  lang = lang === 'en' ? 'km' : 'en';
-  applyLang();
-}
+function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
 function applyLang() {
   const t = T[lang];
-  document.getElementById('lbl-staff').textContent     = t.staff;
-  document.getElementById('lbl-type').textContent      = t.type;
-  document.getElementById('lbl-walkin-btn').textContent = t.walkinBtn;
-  document.getElementById('lbl-walkin-sub').textContent = t.walkinSub;
-  document.getElementById('lbl-staying-btn').textContent= t.stayingBtn;
-  document.getElementById('lbl-staying-sub').textContent= t.stayingSub;
-  document.getElementById('lbl-room').textContent      = t.room;
-  document.getElementById('lbl-count').textContent     = t.count;
-  document.getElementById('lbl-count-hint').innerHTML  = t.countHint;
-  document.getElementById('submitBtn').textContent     = t.submit;
-  document.getElementById('lbl-lb').textContent        = t.lb;
-  document.getElementById('lbl-log').textContent       = t.log;
-  document.getElementById('lbl-reset').textContent     = t.reset;
-  document.getElementById('langBtn').textContent       = t.langBtn;
-  renderLeaderboard();
+  document.getElementById('lbl-tree').textContent           = t.tree;
+  document.getElementById('lbl-type').textContent           = t.type;
+  document.getElementById('lbl-walkin-btn').textContent     = t.walkinBtn;
+  document.getElementById('lbl-walkin-sub').textContent     = t.walkinSub;
+  document.getElementById('lbl-staying-btn').textContent    = t.stayingBtn;
+  document.getElementById('lbl-staying-sub').textContent    = t.stayingSub;
+  document.getElementById('lbl-room').textContent           = t.room;
+  document.getElementById('lbl-count').textContent          = t.count;
+  document.getElementById('lbl-count-hint').innerHTML       = t.countHint;
+  document.getElementById('submitBtn').textContent          = t.submit;
+  document.getElementById('lbl-log').textContent            = t.log;
+  document.getElementById('lbl-admin').textContent          = t.admin;
+  document.getElementById('lbl-back').textContent           = t.back;
+  document.getElementById('lbl-stats').textContent          = t.stats;
+  document.getElementById('tab-today').textContent          = t.tabToday;
+  document.getElementById('tab-week').textContent           = t.tabWeek;
+  document.getElementById('tab-month').textContent          = t.tabMonth;
+  document.getElementById('lbl-stat-walkin').textContent    = t.statWalkin;
+  document.getElementById('lbl-stat-hotel').textContent     = t.statHotel;
+  document.getElementById('lbl-stat-trees').textContent     = t.statTrees;
+  document.getElementById('lbl-adj-tree').textContent       = t.adjTree;
+  document.getElementById('lbl-adj-num').textContent        = t.adjNum;
+  document.getElementById('lbl-adj-walkin').textContent     = t.adjWalkin;
+  document.getElementById('lbl-adj-hotel').textContent      = t.adjHotel;
+  document.getElementById('lbl-adj-complete').textContent   = t.adjComplete;
+  document.getElementById('lbl-adj-complete-total').textContent = t.adjCompleteTotal;
+  document.getElementById('lbl-new-tree').textContent       = t.newTree;
+  document.getElementById('langBtn').textContent            = t.langBtn;
+  renderTree();
   renderLog();
+  renderStats();
+  renderAdminValues();
+}
+
+// ── Config ────────────────────────────────────────────
+const ROOMS      = Array.from({ length: 24 }, (_, i) => String(101 + i));
+const MILESTONES = [10, 20, 30, 50];
+
+const DURIAN_POS = [
+  [210, 112, 0.85], [254, 118, 0.90], [172, 138, 0.75],
+  [293, 144, 0.78], [146, 165, 0.70],
+  [316, 173, 0.72], [127, 191, 0.67],
+  [222, 104, 0.88], [175, 182, 0.65], [267, 175, 0.70],
+  [304, 157, 0.70], [153, 152, 0.67],
+];
+const STAGE_COUNTS = [0, 3, 5, 7, 10, 12];
+
+function getStage(total) {
+  if (total >= 100) return 5;
+  if (total >= 50)  return 4;
+  if (total >= 30)  return 3;
+  if (total >= 20)  return 2;
+  if (total >= 10)  return 1;
+  return 0;
 }
 
 // ── State ─────────────────────────────────────────────
-const STAFF_NAMES = ['Dara','Sokha','Maly','Piseth','Channary','Ratanak','Sreyla','Veasna'];
-const ROOMS = Array.from({length:24}, (_,i) => String(101 + i));
+let selectedType = null;
+let selectedRoom = null;
+let guestCount   = 1;
+let activePeriod = 'month';
 
-let selectedStaff = null;
-let selectedType  = null;
-let selectedRoom  = null;
-let guestCount    = 1;
+// ── Storage ───────────────────────────────────────────
+const STORAGE_KEY = 'sambor3';
 
-// ── Load / Save data ───────────────────────────────────
-function todayKey() {
-  return 'sambor_' + new Date().toISOString().slice(0,10);
-}
 function loadData() {
-  try { return JSON.parse(localStorage.getItem(todayKey()) || '{"counts":{},"log":[]}'); }
-  catch(e) { return {counts:{}, log:[]}; }
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    return {
+      tree:        d.tree        || { num: 1, walkin: 0, hotel: 0 },
+      log:         d.log         || [],
+      completions: d.completions || [],
+    };
+  } catch(e) {
+    return { tree: { num: 1, walkin: 0, hotel: 0 }, log: [], completions: [] };
+  }
 }
-function saveData(data) {
-  localStorage.setItem(todayKey(), JSON.stringify(data));
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+// ── Date helpers ──────────────────────────────────────
+function localDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-// ── Render staff grid ──────────────────────────────────
-function renderStaff() {
-  const data  = loadData();
-  const grid  = document.getElementById('staffGrid');
-  grid.innerHTML = '';
-  STAFF_NAMES.forEach(name => {
-    const count = (data.counts[name] || 0);
-    const btn = document.createElement('button');
-    btn.className = 'staff-btn' + (selectedStaff === name ? ' selected' : '');
-    btn.innerHTML = `<span>${name}</span><span class="staff-count">${count > 0 ? '👤 '+count : ''}</span>`;
-    btn.onclick = () => selectStaff(name);
-    grid.appendChild(btn);
-  });
+// ── View switching ────────────────────────────────────
+function showView(v) {
+  document.getElementById('viewMain').style.display  = v === 'main'  ? 'flex' : 'none';
+  document.getElementById('viewAdmin').style.display = v === 'admin' ? 'flex' : 'none';
+  if (v === 'admin') { renderStats(); renderAdminValues(); }
 }
 
-function selectStaff(name) {
-  selectedStaff = name;
-  renderStaff();
-  checkSubmit();
+// ── Durian SVG ────────────────────────────────────────
+function makeDurian(cx, cy, s, stage) {
+  const pal = [
+    { b: '#3a6e15', sp: '#294e0f' },
+    { b: '#4a8520', sp: '#335a12' },
+    { b: '#5a9a28', sp: '#3d6a18' },
+    { b: '#8aab2e', sp: '#5a7a1e' },
+    { b: '#c8a800', sp: '#907800' },
+    { b: '#d4820a', sp: '#a05a08' },
+  ];
+  const p = pal[stage];
+  const rx = 14 * s, ry = 19 * s;
+  let spk = '';
+  for (let i = 0; i < 12; i++) {
+    const a  = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const ex = cx + rx * Math.cos(a), ey = cy + ry * Math.sin(a);
+    const dx = ex - cx, dy = ey - cy;
+    const dd = Math.sqrt(dx * dx + dy * dy);
+    const ux = dx / dd, uy = dy / dd;
+    const ox = ex + ux * 9 * s, oy = ey + uy * 9 * s;
+    const pw = 3.5 * s;
+    spk += `<polygon points="${ex - uy*pw},${ey + ux*pw} ${ox},${oy} ${ex + uy*pw},${ey - ux*pw}" fill="${p.sp}"/>`;
+  }
+  return `<g>${spk}
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${p.b}"/>
+    <ellipse cx="${cx - rx*.25}" cy="${cy - ry*.28}" rx="${rx*.28}" ry="${ry*.18}" fill="rgba(255,255,255,.18)"/>
+    <line x1="${cx}" y1="${cy - ry}" x2="${cx + 2*s}" y2="${cy - ry - 8*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5, 2*s)}" stroke-linecap="round"/>
+  </g>`;
 }
 
-// ── Guest type ─────────────────────────────────────────
+function renderTree(overrideData) {
+  const data  = overrideData || loadData();
+  const total = data.tree.walkin + data.tree.hotel;
+  const stage = getStage(total);
+  const t     = T[lang];
+
+  let html = '';
+  html += `<ellipse cx="220" cy="275" rx="76" ry="7" fill="#0a1a08" opacity="0.55"/>`;
+  html += `<path d="M206,273 L212,198 L228,198 L234,273 Z" fill="#7a4e1a"/>`;
+  html += `<path d="M209,273 L213,198 L215,198 L212,273 Z" fill="#9a6a30" opacity="0.45"/>`;
+  html += `<ellipse cx="204" cy="271" rx="11" ry="5" fill="#7a4e1a"/>`;
+  html += `<ellipse cx="236" cy="271" rx="11" ry="5" fill="#7a4e1a"/>`;
+  html += `<circle cx="132" cy="190" r="62" fill="#1a4e08"/>`;
+  html += `<circle cx="308" cy="190" r="62" fill="#1a4e08"/>`;
+  html += `<circle cx="177" cy="194" r="60" fill="#1e5c0f"/>`;
+  html += `<circle cx="263" cy="187" r="57" fill="#1e5c0f"/>`;
+  html += `<circle cx="220" cy="168" r="86" fill="#1e5c0f"/>`;
+  html += `<circle cx="164" cy="168" r="46" fill="#246e12"/>`;
+  html += `<circle cx="276" cy="170" r="46" fill="#246e12"/>`;
+  html += `<circle cx="220" cy="138" r="68" fill="#246e12"/>`;
+  html += `<circle cx="220" cy="118" r="50" fill="#2a7e15"/>`;
+  for (let i = 0; i < STAGE_COUNTS[stage]; i++) {
+    const [dx, dy, ds] = DURIAN_POS[i];
+    html += makeDurian(dx, dy, ds, stage);
+  }
+  document.getElementById('treeSvg').innerHTML = html;
+  document.getElementById('treeCurrent').textContent  = total;
+  document.getElementById('treeNumLabel').textContent = t.treeNumLabel(data.tree.num || 1);
+  document.getElementById('treeWalkin').textContent   = data.tree.walkin;
+  document.getElementById('treeHotel').textContent    = data.tree.hotel;
+  document.getElementById('treeStage').textContent    = t.stageNames[stage];
+}
+
+// ── Stats ─────────────────────────────────────────────
+function switchTab(period) {
+  activePeriod = period;
+  ['today', 'week', 'month'].forEach(p =>
+    document.getElementById('tab-' + p).classList.toggle('active', p === period)
+  );
+  renderStats();
+}
+
+function getDateRange(period) {
+  const now   = new Date();
+  const today = localDate(now);
+  if (period === 'today') return { start: today, end: today };
+  if (period === 'week') {
+    const day  = now.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    const mon  = new Date(now); mon.setDate(now.getDate() - diff);
+    const sun  = new Date(mon); sun.setDate(mon.getDate() + 6);
+    return { start: localDate(mon), end: localDate(sun) };
+  }
+  const y = now.getFullYear(), m = now.getMonth();
+  return { start: localDate(new Date(y, m, 1)), end: localDate(new Date(y, m + 1, 0)) };
+}
+
+function renderStats() {
+  const { start, end } = getDateRange(activePeriod);
+  const data    = loadData();
+  const entries = data.log.filter(e => e.date >= start && e.date <= end);
+  const wi      = entries.filter(e => e.type === 'walkin');
+  const ht      = entries.filter(e => e.type === 'staying');
+  const trees   = data.completions.filter(c => c.date >= start && c.date <= end).length;
+  const t       = T[lang];
+  document.getElementById('statsWalkinGroups').textContent = wi.length;
+  document.getElementById('statsWalkinGuests').textContent = t.guests(wi.reduce((s, e) => s + e.count, 0));
+  document.getElementById('statsHotelGroups').textContent  = ht.length;
+  document.getElementById('statsHotelGuests').textContent  = t.guests(ht.reduce((s, e) => s + e.count, 0));
+  document.getElementById('statsTrees').textContent        = trees;
+}
+
+// ── Admin adjustments ─────────────────────────────────
+function renderAdminValues() {
+  const data = loadData();
+  document.getElementById('adjNum').textContent         = data.tree.num || 1;
+  document.getElementById('adjWalkin').textContent      = data.tree.walkin || 0;
+  document.getElementById('adjHotel').textContent       = data.tree.hotel || 0;
+  document.getElementById('adjCompletions').textContent = data.completions.length;
+}
+
+function adjTree(field, delta) {
+  const data = loadData();
+  if (field === 'num') {
+    data.tree.num    = Math.max(1, (data.tree.num    || 1) + delta);
+  } else if (field === 'walkin') {
+    data.tree.walkin = Math.max(0, (data.tree.walkin || 0) + delta);
+  } else if (field === 'hotel') {
+    data.tree.hotel  = Math.max(0, (data.tree.hotel  || 0) + delta);
+  }
+  saveData(data);
+  renderAdminValues();
+  renderTree();
+}
+
+function adjCompletions(delta) {
+  const data = loadData();
+  if (delta > 0) {
+    data.completions.unshift({ date: localDate(new Date()), ts: Date.now() });
+  } else if (delta < 0 && data.completions.length > 0) {
+    data.completions.shift();
+  }
+  saveData(data);
+  renderAdminValues();
+  renderStats();
+}
+
+function confirmNewTree() {
+  if (!confirm(T[lang].newTreeConfirm)) return;
+  const data = loadData();
+  data.tree = { num: (data.tree.num || 1) + 1, walkin: 0, hotel: 0 };
+  saveData(data);
+  renderAdminValues();
+  renderTree();
+}
+
+// ── Guest type ────────────────────────────────────────
 function selectType(type) {
   selectedType = type;
   selectedRoom = null;
-  document.getElementById('btn-walkin').classList.toggle('selected', type==='walkin');
-  document.getElementById('btn-staying').classList.toggle('selected', type==='staying');
+  document.getElementById('btn-walkin').classList.toggle('selected',  type === 'walkin');
+  document.getElementById('btn-staying').classList.toggle('selected', type === 'staying');
   const rs = document.getElementById('roomSection');
-  rs.classList.toggle('visible', type==='staying');
+  rs.classList.toggle('visible', type === 'staying');
   if (type === 'staying') renderRooms();
   checkSubmit();
 }
 
-// ── Room grid ──────────────────────────────────────────
 function renderRooms() {
   const grid = document.getElementById('roomGrid');
   grid.innerHTML = '';
   ROOMS.forEach(r => {
     const btn = document.createElement('button');
-    btn.className = 'room-btn' + (selectedRoom === r ? ' selected' : '');
+    btn.className   = 'room-btn' + (selectedRoom === r ? ' selected' : '');
     btn.textContent = r;
-    btn.onclick = () => selectRoom(r);
+    btn.onclick     = () => selectRoom(r);
     grid.appendChild(btn);
   });
 }
-function selectRoom(r) {
-  selectedRoom = r;
-  renderRooms();
-  checkSubmit();
-}
+function selectRoom(r) { selectedRoom = r; renderRooms(); checkSubmit(); }
 
-// ── Count ──────────────────────────────────────────────
 function changeCount(delta) {
   guestCount = Math.max(1, Math.min(20, guestCount + delta));
   document.getElementById('countNum').textContent = guestCount;
 }
 
-// ── Submit check ───────────────────────────────────────
 function checkSubmit() {
-  const ok = selectedStaff && selectedType && (selectedType === 'walkin' || selectedRoom);
-  document.getElementById('submitBtn').disabled = !ok;
+  document.getElementById('submitBtn').disabled =
+    !(selectedType && (selectedType === 'walkin' || selectedRoom));
 }
 
-// ── Submit ─────────────────────────────────────────────
-function handleSubmit() {
-  const data = loadData();
-  if (!data.counts[selectedStaff]) data.counts[selectedStaff] = 0;
-  data.counts[selectedStaff] += guestCount;
-
-  const entry = {
-    staff: selectedStaff,
-    type:  selectedType,
-    room:  selectedRoom,
-    count: guestCount,
-    time:  new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}),
-  };
-  data.log.unshift(entry);
-  saveData(data);
-
-  const t = T[lang];
-  const total = data.counts[selectedStaff];
-  let msg = selectedType === 'walkin'
-    ? t.toastWalkin(selectedStaff, guestCount)
-    : t.toastStaying(selectedStaff, guestCount, selectedRoom);
-
-  // milestone check
-  const milestones = [10,20,30,50,100];
-  if (milestones.some(m => total >= m && total - guestCount < m)) {
-    setTimeout(() => { showToast(t.toastMile(selectedStaff, total)); launchConfetti(); }, 600);
-  }
-
-  showToast(msg);
-
-  // reset form (keep staff)
-  selectedType = null;
-  selectedRoom = null;
-  guestCount   = 1;
+// ── Submit ────────────────────────────────────────────
+function resetForm() {
+  selectedType = null; selectedRoom = null; guestCount = 1;
   document.getElementById('countNum').textContent = '1';
   document.getElementById('btn-walkin').classList.remove('selected');
   document.getElementById('btn-staying').classList.remove('selected');
   document.getElementById('roomSection').classList.remove('visible');
-  checkSubmit();
-  renderStaff();
-  renderLeaderboard();
-  renderLog();
 }
 
-// ── Leaderboard ────────────────────────────────────────
-function renderLeaderboard() {
-  const data    = loadData();
-  const sorted  = Object.entries(data.counts).sort((a,b) => b[1]-a[1]);
-  const list    = document.getElementById('lbList');
-  const empty   = document.getElementById('lbl-empty');
-  const t       = T[lang];
+function handleSubmit() {
+  const data      = loadData();
+  const prevTotal = data.tree.walkin + data.tree.hotel;
+  const today     = localDate(new Date());
+  const time      = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  const t         = T[lang];
 
-  if (sorted.length === 0) {
-    list.innerHTML = '';
-    const div = document.createElement('div');
-    div.className = 'empty-state';
-    div.textContent = t.empty;
-    list.appendChild(div);
-    return;
+  if (selectedType === 'walkin') data.tree.walkin += guestCount;
+  else                           data.tree.hotel  += guestCount;
+
+  data.log.unshift({ type: selectedType, room: selectedRoom, count: guestCount, date: today, ts: Date.now(), time });
+
+  const newTotal     = data.tree.walkin + data.tree.hotel;
+  const completedNum = data.tree.num || 1;
+
+  if (newTotal >= 100) {
+    data.completions.unshift({ date: today, ts: Date.now() });
+    const snapshot = { tree: { ...data.tree } };
+    data.tree = { num: completedNum + 1, walkin: 0, hotel: 0 };
+    saveData(data);
+
+    renderTree(snapshot);
+    renderLog();
+    showToast(t.toastComplete(completedNum));
+    setTimeout(() => launchConfetti(), 300);
+
+    resetForm();
+    document.getElementById('submitBtn').disabled = true;
+    setTimeout(() => { renderTree(); checkSubmit(); }, 3000);
+
+  } else {
+    saveData(data);
+    showToast(selectedType === 'walkin'
+      ? t.toastWalkin(guestCount)
+      : t.toastStaying(guestCount, selectedRoom));
+
+    if (MILESTONES.some(m => newTotal >= m && prevTotal < m)) {
+      setTimeout(() => { showToast(t.toastMile(newTotal)); launchConfetti(); }, 700);
+    }
+
+    resetForm();
+    renderTree();
+    renderLog();
+    checkSubmit();
   }
-  const max = sorted[0][1];
-  list.innerHTML = '';
-  const medals = ['🥇','🥈','🥉'];
-  sorted.forEach(([name, count], i) => {
-    const item = document.createElement('div');
-    item.className = 'lb-item';
-    const rankEl = document.createElement('div');
-    rankEl.className = 'lb-rank' + (i < 3 ? ' top' : '');
-    rankEl.textContent = medals[i] || (i+1);
-    const nameEl = document.createElement('div');
-    nameEl.className = 'lb-name';
-    nameEl.textContent = name;
-    const barWrap = document.createElement('div');
-    barWrap.className = 'lb-bar-wrap';
-    const bar = document.createElement('div');
-    bar.className = 'lb-bar';
-    bar.style.width = (count / max * 100) + '%';
-    barWrap.appendChild(bar);
-    const countEl = document.createElement('div');
-    countEl.className = 'lb-count';
-    countEl.textContent = count;
-    item.append(rankEl, nameEl, barWrap, countEl);
-    list.appendChild(item);
-  });
 }
 
-// ── Log ────────────────────────────────────────────────
+// ── Log ───────────────────────────────────────────────
+function shortDate(dateStr) {
+  if (!dateStr) return '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parts = dateStr.split('-');
+  return `${months[Number(parts[1]) - 1]} ${Number(parts[2])}`;
+}
+
 function renderLog() {
-  const data = loadData();
-  const list = document.getElementById('logList');
-  const t    = T[lang];
+  const data    = loadData();
+  const list    = document.getElementById('logList');
+  const t       = T[lang];
+  const todayStr = localDate(new Date());
+
   if (data.log.length === 0) {
     list.innerHTML = `<div class="empty-state">${t.logEmpty}</div>`;
     return;
   }
   list.innerHTML = '';
-  data.log.slice(0, 20).forEach(entry => {
-    const item = document.createElement('div');
+  data.log.slice(0, 30).forEach((entry, i) => {
+    const item  = document.createElement('div');
     item.className = 'log-item';
-    const left = document.createElement('span');
-    left.textContent = `${entry.time}  ${entry.staff}  👤${entry.count}${entry.room ? '  Rm '+entry.room : ''}`;
+
+    const left  = document.createElement('span');
+    const datePrefix = entry.date && entry.date !== todayStr ? `${shortDate(entry.date)}  ` : '';
+    left.textContent = `${datePrefix}${entry.time}  👤${entry.count}${entry.room ? '  Rm ' + entry.room : ''}`;
+
     const badge = document.createElement('span');
-    badge.className = 'log-badge ' + entry.type;
+    badge.className   = 'log-badge ' + entry.type;
     badge.textContent = entry.type === 'walkin' ? 'Walk-in' : 'Staying';
-    item.append(left, badge);
+
+    const del = document.createElement('button');
+    del.className = 'log-del';
+    del.textContent = '×';
+    del.onclick = () => deleteLogEntry(i);
+
+    item.append(left, badge, del);
     list.appendChild(item);
   });
 }
 
-// ── Toast ──────────────────────────────────────────────
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastMsg').innerHTML = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2800);
+function deleteLogEntry(index) {
+  if (!confirm(T[lang].deleteConfirm)) return;
+  const data = loadData();
+  data.log.splice(index, 1);
+  saveData(data);
+  renderLog();
+  renderStats();
 }
 
-// ── Confetti ───────────────────────────────────────────
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').innerHTML = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ── Confetti ──────────────────────────────────────────
 function launchConfetti() {
-  const wrap = document.getElementById('confettiWrap');
-  const colors = ['#c9a84c','#e8c97a','#a8e6c4','#a8d0e8','#ffffff'];
-  for (let i = 0; i < 60; i++) {
+  const wrap   = document.getElementById('confettiWrap');
+  const colors = ['#c9a84c','#e8c97a','#a8e6c4','#5a9a28','#d4820a','#ffffff'];
+  for (let i = 0; i < 80; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration = (.8 + Math.random() * 1.2) + 's';
-    p.style.animationDelay = (Math.random() * .5) + 's';
+    p.style.left              = Math.random() * 100 + 'vw';
+    p.style.background        = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (.8 + Math.random() * 1.4) + 's';
+    p.style.animationDelay    = (Math.random() * .8) + 's';
     wrap.appendChild(p);
-    setTimeout(() => p.remove(), 2500);
+    setTimeout(() => p.remove(), 3000);
   }
 }
 
-// ── Reset ──────────────────────────────────────────────
-function confirmReset() {
-  if (confirm(T[lang].resetConfirm)) {
-    localStorage.removeItem(todayKey());
-    selectedStaff = null; selectedType = null; selectedRoom = null; guestCount = 1;
-    document.getElementById('countNum').textContent = '1';
-    document.getElementById('btn-walkin').classList.remove('selected');
-    document.getElementById('btn-staying').classList.remove('selected');
-    document.getElementById('roomSection').classList.remove('visible');
-    checkSubmit();
-    renderStaff();
-    renderLeaderboard();
-    renderLog();
-  }
-}
-
-// ── Init ───────────────────────────────────────────────
-renderStaff();
-renderLeaderboard();
+// ── Init ──────────────────────────────────────────────
+renderTree();
 renderLog();
+renderStats();
+renderAdminValues();
 applyLang();
 </script>
 </body>
