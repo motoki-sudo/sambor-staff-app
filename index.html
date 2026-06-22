@@ -46,8 +46,15 @@
     justify-content: space-between;
     align-items: flex-start;
   }
+  .header-left { display: flex; align-items: center; gap: 8px; }
   .hotel-name { font-family: 'Cinzel', serif; font-size: 13px; color: var(--gold); letter-spacing: .12em; line-height: 1.5; }
   .hotel-sub  { font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; }
+  .sync-dot--online  { background: #4caf50; }
+  .sync-dot--offline { background: #ff9800; }
+  .sync-dot--syncing { background: var(--gold); animation: pulse .8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
 
   .lang-toggle {
     background: transparent; border: 1px solid var(--gold); color: var(--gold);
@@ -57,7 +64,6 @@
   .lang-toggle:active { background: rgba(201,168,76,.15); }
 
   main { width: 100%; max-width: 480px; padding: 16px 20px 40px; }
-
   .view { display: flex; flex-direction: column; gap: 16px; }
 
   .card {
@@ -66,7 +72,6 @@
     border-radius: var(--radius);
     padding: 20px;
   }
-
   .section-label {
     font-size: 10px; font-weight: 600; letter-spacing: .15em;
     text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
@@ -79,11 +84,11 @@
     padding-top: 12px; border-top: 1px solid rgba(201,168,76,.12); margin-top: 10px;
   }
   .tree-progress-row { display: flex; align-items: baseline; gap: 3px; }
-  .tree-current  { font-size: 40px; font-weight: 700; color: var(--gold-lt); line-height: 1; font-variant-numeric: tabular-nums; }
-  .tree-max      { font-size: 18px; color: var(--muted); font-weight: 500; }
+  .tree-current   { font-size: 40px; font-weight: 700; color: var(--gold-lt); line-height: 1; font-variant-numeric: tabular-nums; }
+  .tree-max       { font-size: 18px; color: var(--muted); font-weight: 500; }
   .tree-num-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
   .tree-breakdown { display: flex; gap: 14px; font-size: 13px; color: rgba(245,240,232,.7); margin-top: 2px; }
-  .tree-stage { font-size: 12px; color: var(--gold); margin-top: 4px; font-weight: 500; }
+  .tree-stage     { font-size: 12px; color: var(--gold); margin-top: 4px; font-weight: 500; }
 
   /* ── Guest type ── */
   .type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -134,19 +139,7 @@
   .submit-btn:disabled { opacity: .35; cursor: not-allowed; }
   .submit-btn:not(:disabled):active { transform: scale(.98); }
 
-  /* ── Log ── */
-  .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
-  .log-item {
-    font-size: 12px; color: rgba(245,240,232,.6); padding: 6px 10px;
-    background: rgba(255,255,255,.03); border-radius: 8px;
-    display: flex; justify-content: space-between; align-items: center; gap: 8px;
-  }
-  .log-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
-  .log-badge.walkin  { background: rgba(45,106,79,.5);  color: #a8e6c4; }
-  .log-badge.staying { background: rgba(30,77,107,.5);  color: #a8d0e8; }
-  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
-
-  /* ── Admin link (main bottom) ── */
+  /* ── Admin link ── */
   .admin-link-row { display: flex; justify-content: center; padding-top: 4px; }
   .admin-link {
     background: transparent; border: none; color: rgba(245,240,232,.18);
@@ -162,7 +155,7 @@
   }
   .back-btn:active { opacity: .7; }
 
-  /* ── Stats (admin) ── */
+  /* ── Stats ── */
   .stats-tabs { display: flex; gap: 5px; margin-bottom: 14px; }
   .stats-tab {
     flex: 1; padding: 7px 4px; border: 1px solid rgba(201,168,76,.2); border-radius: 8px;
@@ -181,25 +174,27 @@
   .stat-sub  { font-size: 10px; color: var(--muted); min-height: 14px; }
   .stat-lbl  { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
 
-  /* ── Adjust controls (admin) ── */
-  .adj-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+  /* ── Log ── */
+  .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+  .log-list--admin { max-height: 340px; }
+  .log-item {
+    font-size: 12px; color: rgba(245,240,232,.6); padding: 6px 10px;
+    background: rgba(255,255,255,.03); border-radius: 8px;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
   }
-  .adj-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .adj-row:first-child { padding-top: 0; }
-  .adj-label { font-size: 13px; color: rgba(245,240,232,.7); }
-  .adj-ctrl  { display: flex; align-items: center; gap: 12px; }
-  .adj-btn {
-    width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(201,168,76,.4);
-    background: transparent; color: var(--gold-lt); font-size: 18px; cursor: pointer;
-    font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
+  .log-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+  .log-badge.walkin  { background: rgba(45,106,79,.5);   color: #a8e6c4; }
+  .log-badge.staying { background: rgba(30,77,107,.5);   color: #a8d0e8; }
+  .log-badge.event   { background: rgba(201,168,76,.2);  color: var(--gold-lt); }
+  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .log-del {
+    background: transparent; border: none; color: rgba(255,100,100,.35);
+    font-size: 16px; line-height: 1; cursor: pointer; padding: 2px 4px;
+    flex-shrink: 0; transition: color .15s; font-family: 'Inter', sans-serif;
   }
-  .adj-btn:active { background: rgba(201,168,76,.15); }
-  .adj-val { font-size: 20px; font-weight: 700; color: var(--gold-lt); min-width: 32px; text-align: center; font-variant-numeric: tabular-nums; }
+  .log-del:active { color: rgba(255,100,100,.9); }
 
-  /* ── Danger button (admin) ── */
+  /* ── Danger button ── */
   .danger-btn {
     width: 100%; padding: 14px; background: transparent;
     border: 1px solid rgba(255,100,100,.3); border-radius: var(--radius);
@@ -224,25 +219,19 @@
   .confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; border-radius: 2px; animation: confetti-fall linear forwards; }
   @keyframes confetti-fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
-  .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
-  .log-list--admin { max-height: 340px; }
   .log-list::-webkit-scrollbar { width: 4px; }
   .log-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 2px; }
-
-  .log-del {
-    background: transparent; border: none; color: rgba(255,100,100,.35);
-    font-size: 16px; line-height: 1; cursor: pointer; padding: 2px 4px;
-    flex-shrink: 0; transition: color .15s; font-family: 'Inter', sans-serif;
-  }
-  .log-del:active { color: rgba(255,100,100,.9); }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <div class="hotel-name">Sambor Village Hotel</div>
-    <div class="hotel-sub">Restaurant · Staff App</div>
+  <div class="header-left">
+    <div>
+      <div class="hotel-name">Sambor Village Hotel</div>
+      <div class="hotel-sub">Restaurant · Staff App</div>
+    </div>
+    <span id="syncDot" class="sync-dot sync-dot--offline"></span>
   </div>
   <button class="lang-toggle" onclick="toggleLang()" id="langBtn">ភាសាខ្មែរ</button>
 </header>
@@ -252,7 +241,6 @@
   <!-- ═══ MAIN VIEW ═══ -->
   <div id="viewMain" class="view">
 
-    <!-- Durian Tree -->
     <div class="card tree-card">
       <div class="section-label" id="lbl-tree">Durian Tree</div>
       <svg id="treeSvg" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -271,34 +259,23 @@
       </div>
     </div>
 
-    <!-- Guest type -->
     <div class="card">
       <div class="section-label" id="lbl-type">Guest Type</div>
       <div class="type-row">
         <button class="type-btn walkin"  onclick="selectType('walkin')"  id="btn-walkin">
-          🚶
-          <div>
-            <div class="type-label" id="lbl-walkin-btn">Walk-in</div>
-            <div class="type-sub"   id="lbl-walkin-sub">Visiting guest</div>
-          </div>
+          🚶<div><div class="type-label" id="lbl-walkin-btn">Walk-in</div><div class="type-sub" id="lbl-walkin-sub">Visiting guest</div></div>
         </button>
         <button class="type-btn staying" onclick="selectType('staying')" id="btn-staying">
-          🏨
-          <div>
-            <div class="type-label" id="lbl-staying-btn">Hotel Guest</div>
-            <div class="type-sub"   id="lbl-staying-sub">Staying here</div>
-          </div>
+          🏨<div><div class="type-label" id="lbl-staying-btn">Hotel Guest</div><div class="type-sub" id="lbl-staying-sub">Staying here</div></div>
         </button>
       </div>
     </div>
 
-    <!-- Room -->
     <div class="card room-section" id="roomSection">
       <div class="section-label" id="lbl-room">Room Number</div>
       <div class="room-grid" id="roomGrid"></div>
     </div>
 
-    <!-- Count -->
     <div class="card">
       <div class="section-label" id="lbl-count">Number of Guests</div>
       <div class="count-row">
@@ -327,7 +304,6 @@
 
     <button class="back-btn" onclick="showView('main')" id="lbl-back">← Back</button>
 
-    <!-- Summary -->
     <div class="card">
       <div class="section-label" id="lbl-stats">Summary</div>
       <div class="stats-tabs">
@@ -357,55 +333,11 @@
       </div>
     </div>
 
-    <!-- Tree adjustment -->
-    <div class="card">
-      <div class="section-label" id="lbl-adj-tree">Tree Adjustment</div>
-      <div class="adj-row">
-        <div class="adj-label" id="lbl-adj-num">Tree #</div>
-        <div class="adj-ctrl">
-          <button class="adj-btn" onclick="adjTree('num', -1)">−</button>
-          <div class="adj-val" id="adjNum">1</div>
-          <button class="adj-btn" onclick="adjTree('num', 1)">+</button>
-        </div>
-      </div>
-      <div class="adj-row">
-        <div class="adj-label" id="lbl-adj-walkin">🚶 Walk-in (current tree)</div>
-        <div class="adj-ctrl">
-          <button class="adj-btn" onclick="adjTree('walkin', -1)">−</button>
-          <div class="adj-val" id="adjWalkin">0</div>
-          <button class="adj-btn" onclick="adjTree('walkin', 1)">+</button>
-        </div>
-      </div>
-      <div class="adj-row">
-        <div class="adj-label" id="lbl-adj-hotel">🏨 Hotel (current tree)</div>
-        <div class="adj-ctrl">
-          <button class="adj-btn" onclick="adjTree('hotel', -1)">−</button>
-          <div class="adj-val" id="adjHotel">0</div>
-          <button class="adj-btn" onclick="adjTree('hotel', 1)">+</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Completions adjustment -->
-    <div class="card">
-      <div class="section-label" id="lbl-adj-complete">Completed Trees</div>
-      <div class="adj-row">
-        <div class="adj-label" id="lbl-adj-complete-total">Total completions</div>
-        <div class="adj-ctrl">
-          <button class="adj-btn" onclick="adjCompletions(-1)">−</button>
-          <div class="adj-val" id="adjCompletions">0</div>
-          <button class="adj-btn" onclick="adjCompletions(1)">+</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Records -->
     <div class="card">
       <div class="section-label" id="lbl-log">Recent Records</div>
       <div class="log-list log-list--admin" id="logList"></div>
     </div>
 
-    <!-- Start new tree -->
     <button class="danger-btn" onclick="confirmNewTree()" id="lbl-new-tree">Start new tree</button>
 
   </div><!-- /viewAdmin -->
@@ -415,88 +347,74 @@
 <div class="toast" id="toast"><div class="toast-inner" id="toastMsg"></div></div>
 <div class="confetti-wrap" id="confettiWrap"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+// ── Supabase ──────────────────────────────────────────
+const SUPABASE_URL = 'https://xbtxluhvyuobcdipsjhe.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_gFHEUXtGlz2-8TNcteJKgQ_ogSRWBdz';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 // ── i18n ──────────────────────────────────────────────
 const T = {
   en: {
-    tree:              'Durian Tree',
-    treeNumLabel:      n => `Tree #${n}`,
-    stageNames:        ['Waiting for guests 🌳','First durians! 🟢','Growing well 🟢','Turning yellow... 🟡','Almost ripe! 💛','Durian season! 🎉'],
-    type:              'Guest Type',
-    walkinBtn:         'Walk-in',
-    walkinSub:         'Visiting guest',
-    stayingBtn:        'Hotel Guest',
-    stayingSub:        'Staying here',
-    room:              'Room Number',
-    count:             'Number of Guests',
-    countHint:         'How many guests<br>did you serve?',
-    submit:            'Record Service',
-    log:               'Recent Records',
-    logEmpty:          'Records will appear here',
-    admin:             'Admin',
-    back:              '← Back',
-    stats:             'Summary',
-    tabToday:          'Today',
-    tabWeek:           'This week',
-    tabMonth:          'This month',
-    statWalkin:        'Walk-in',
-    statHotel:         'Hotel',
-    statTrees:         'Trees',
-    guests:            n => `${n} guest${n !== 1 ? 's' : ''}`,
-    adjTree:           'Tree Adjustment',
-    adjNum:            'Tree #',
-    adjWalkin:         '🚶 Walk-in (current tree)',
-    adjHotel:          '🏨 Hotel (current tree)',
-    adjComplete:       'Completed Trees',
-    adjCompleteTotal:  'Total completions',
-    newTree:           'Start new tree',
-    newTreeConfirm:    "Reset current tree progress?\n(All records are preserved.)",
-    deleteConfirm:     "Delete this record?\nSummary stats will update automatically.",
-    toastWalkin:       n => `✅ ${n} walk-in guest${n > 1 ? 's' : ''} recorded!`,
-    toastStaying:      (n, room) => `✅ Room ${room} — ${n} guest${n > 1 ? 's' : ''}!`,
-    toastMile:         total => `🌳 ${total} guests! Durian is ripening!`,
-    toastComplete:     n => `🎉 Tree #${n} complete! Amazing teamwork!`,
-    langBtn:           'ភាសាខ្មែរ',
+    tree:          'Durian Tree',
+    treeNumLabel:  n => `Tree #${n}`,
+    stageNames:    ['Waiting for guests 🌳','First durians! 🟢','Growing well 🟢','Turning yellow... 🟡','Almost ripe! 💛','Durian season! 🎉'],
+    type:          'Guest Type',
+    walkinBtn:     'Walk-in',    walkinSub:  'Visiting guest',
+    stayingBtn:    'Hotel Guest', stayingSub: 'Staying here',
+    room:          'Room Number',
+    count:         'Number of Guests',
+    countHint:     'How many guests<br>did you serve?',
+    submit:        'Record Service',
+    admin:         'Admin',
+    back:          '← Back',
+    stats:         'Summary',
+    tabToday:      'Today', tabWeek: 'This week', tabMonth: 'This month',
+    statWalkin:    'Walk-in', statHotel: 'Hotel', statTrees: 'Trees',
+    guests:        n => `${n} guest${n !== 1 ? 's' : ''}`,
+    log:           'Recent Records',
+    logEmpty:      'Records will appear here',
+    newTree:       'Start new tree',
+    newTreeConfirm:'Reset current tree progress?\n(All records are preserved.)',
+    deleteConfirm: 'Delete this record?\nSummary stats will update automatically.',
+    offlineDelete: 'Deletion requires internet connection.',
+    deleteFailed:  'Delete failed. Please try again.',
+    toastWalkin:   n => `✅ ${n} walk-in guest${n > 1 ? 's' : ''} recorded!`,
+    toastStaying:  (n, room) => `✅ Room ${room} — ${n} guest${n > 1 ? 's' : ''}!`,
+    toastMile:     total => `🌳 ${total} guests! Durian is ripening!`,
+    toastComplete: n => `🎉 Tree #${n} complete! Amazing teamwork!`,
+    langBtn:       'ភាសាខ្មែរ',
   },
   km: {
-    tree:              'ដើម Durian',
-    treeNumLabel:      n => `ដើមទី ${n}`,
-    stageNames:        ['រង់ចាំភ្ញៀវ 🌳','ចេញ Durian តូច 🟢','Durian ធំឡើង 🟢','ចាប់ផ្ដើមមានពណ៌ 🟡','ជិតទុំ! 💛','ទុំហើយ! 🎉'],
-    type:              'ប្រភេទភ្ញៀវ',
-    walkinBtn:         'Walk-in',
-    walkinSub:         'ភ្ញៀវក្រៅ',
-    stayingBtn:        'ភ្ញៀវស្នាក់',
-    stayingSub:        'ស្នាក់នៅទីនេះ',
-    room:              'លេខបន្ទប់',
-    count:             'ចំនួនភ្ញៀវ',
-    countHint:         'ភ្ញៀវប៉ុន្មាននាក់<br>ដែលអ្នកបម្រើ?',
-    submit:            'កត់ត្រាការបម្រើ',
-    log:               'កំណត់ត្រាថ្មីៗ',
-    logEmpty:          'ការកត់ត្រានឹងបង្ហាញនៅទីនេះ',
-    admin:             'Admin',
-    back:              '← ត្រឡប់',
-    stats:             'សង្ខេប',
-    tabToday:          'ថ្ងៃនេះ',
-    tabWeek:           'សប្ដាហ៍នេះ',
-    tabMonth:          'ខែនេះ',
-    statWalkin:        'Walk-in',
-    statHotel:         'Hotel',
-    statTrees:         'ដើម',
-    guests:            n => `${n} នាក់`,
-    adjTree:           'កែប្រែដើម',
-    adjNum:            'ដើមទី',
-    adjWalkin:         '🚶 Walk-in (ដើមបច្ចុប្បន្ន)',
-    adjHotel:          '🏨 Hotel (ដើមបច្ចុប្បន្ន)',
-    adjComplete:       'ដើមទុំ',
-    adjCompleteTotal:  'ចំនួនដើមទុំ',
-    newTree:           'ដើមថ្មី',
-    newTreeConfirm:    'Reset ដើម?\n(ទិន្នន័យ log ត្រូវបានរក្សា)',
-    deleteConfirm:     'លុបកំណត់ត្រានេះ?\nស្ថិតិនឹងត្រូវបានអាប់ដេត។',
-    toastWalkin:       n => `✅ ភ្ញៀវ ${n} នាក់!`,
-    toastStaying:      (n, room) => `✅ បន្ទប់ ${room} — ${n} នាក់!`,
-    toastMile:         total => `🌳 ភ្ញៀវ ${total} នាក់! Durian ចាប់ផ្ដើមទុំ!`,
-    toastComplete:     n => `🎉 ដើមទី ${n} ទុំហើយ!`,
-    langBtn:           'English',
+    tree:          'ដើម Durian',
+    treeNumLabel:  n => `ដើមទី ${n}`,
+    stageNames:    ['រង់ចាំភ្ញៀវ 🌳','ចេញ Durian តូច 🟢','Durian ធំឡើង 🟢','ចាប់ផ្ដើមមានពណ៌ 🟡','ជិតទុំ! 💛','ទុំហើយ! 🎉'],
+    type:          'ប្រភេទភ្ញៀវ',
+    walkinBtn:     'Walk-in',    walkinSub:  'ភ្ញៀវក្រៅ',
+    stayingBtn:    'ភ្ញៀវស្នាក់', stayingSub: 'ស្នាក់នៅទីនេះ',
+    room:          'លេខបន្ទប់',
+    count:         'ចំនួនភ្ញៀវ',
+    countHint:     'ភ្ញៀវប៉ុន្មាននាក់<br>ដែលអ្នកបម្រើ?',
+    submit:        'កត់ត្រាការបម្រើ',
+    admin:         'Admin',
+    back:          '← ត្រឡប់',
+    stats:         'សង្ខេប',
+    tabToday:      'ថ្ងៃនេះ', tabWeek: 'សប្ដាហ៍នេះ', tabMonth: 'ខែនេះ',
+    statWalkin:    'Walk-in', statHotel: 'Hotel', statTrees: 'ដើម',
+    guests:        n => `${n} នាក់`,
+    log:           'កំណត់ត្រាថ្មីៗ',
+    logEmpty:      'ការកត់ត្រានឹងបង្ហាញនៅទីនេះ',
+    newTree:       'ដើមថ្មី',
+    newTreeConfirm:'Reset ដើម?\n(ទិន្នន័យ log ត្រូវបានរក្សា)',
+    deleteConfirm: 'លុបកំណត់ត្រានេះ?\nស្ថិតិនឹងត្រូវបានអាប់ដេត។',
+    offlineDelete: 'ត្រូវការ internet ដើម្បីលុប។',
+    deleteFailed:  'លុបមិនបាន។ សូមព្យាយាមម្ដងទៀត។',
+    toastWalkin:   n => `✅ ភ្ញៀវ ${n} នាក់!`,
+    toastStaying:  (n, room) => `✅ បន្ទប់ ${room} — ${n} នាក់!`,
+    toastMile:     total => `🌳 ភ្ញៀវ ${total} នាក់! Durian ចាប់ផ្ដើមទុំ!`,
+    toastComplete: n => `🎉 ដើមទី ${n} ទុំហើយ!`,
+    langBtn:       'English',
   },
 };
 
@@ -504,38 +422,29 @@ let lang = 'en';
 function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
 function applyLang() {
   const t = T[lang];
-  document.getElementById('lbl-tree').textContent           = t.tree;
-  document.getElementById('lbl-type').textContent           = t.type;
-  document.getElementById('lbl-walkin-btn').textContent     = t.walkinBtn;
-  document.getElementById('lbl-walkin-sub').textContent     = t.walkinSub;
-  document.getElementById('lbl-staying-btn').textContent    = t.stayingBtn;
-  document.getElementById('lbl-staying-sub').textContent    = t.stayingSub;
-  document.getElementById('lbl-room').textContent           = t.room;
-  document.getElementById('lbl-count').textContent          = t.count;
-  document.getElementById('lbl-count-hint').innerHTML       = t.countHint;
-  document.getElementById('submitBtn').textContent          = t.submit;
-  document.getElementById('lbl-log').textContent            = t.log;
-  document.getElementById('lbl-admin').textContent          = t.admin;
-  document.getElementById('lbl-back').textContent           = t.back;
-  document.getElementById('lbl-stats').textContent          = t.stats;
-  document.getElementById('tab-today').textContent          = t.tabToday;
-  document.getElementById('tab-week').textContent           = t.tabWeek;
-  document.getElementById('tab-month').textContent          = t.tabMonth;
-  document.getElementById('lbl-stat-walkin').textContent    = t.statWalkin;
-  document.getElementById('lbl-stat-hotel').textContent     = t.statHotel;
-  document.getElementById('lbl-stat-trees').textContent     = t.statTrees;
-  document.getElementById('lbl-adj-tree').textContent       = t.adjTree;
-  document.getElementById('lbl-adj-num').textContent        = t.adjNum;
-  document.getElementById('lbl-adj-walkin').textContent     = t.adjWalkin;
-  document.getElementById('lbl-adj-hotel').textContent      = t.adjHotel;
-  document.getElementById('lbl-adj-complete').textContent   = t.adjComplete;
-  document.getElementById('lbl-adj-complete-total').textContent = t.adjCompleteTotal;
-  document.getElementById('lbl-new-tree').textContent       = t.newTree;
-  document.getElementById('langBtn').textContent            = t.langBtn;
-  renderTree();
-  renderLog();
-  renderStats();
-  renderAdminValues();
+  document.getElementById('lbl-tree').textContent        = t.tree;
+  document.getElementById('lbl-type').textContent        = t.type;
+  document.getElementById('lbl-walkin-btn').textContent  = t.walkinBtn;
+  document.getElementById('lbl-walkin-sub').textContent  = t.walkinSub;
+  document.getElementById('lbl-staying-btn').textContent = t.stayingBtn;
+  document.getElementById('lbl-staying-sub').textContent = t.stayingSub;
+  document.getElementById('lbl-room').textContent        = t.room;
+  document.getElementById('lbl-count').textContent       = t.count;
+  document.getElementById('lbl-count-hint').innerHTML    = t.countHint;
+  document.getElementById('submitBtn').textContent       = t.submit;
+  document.getElementById('lbl-admin').textContent       = t.admin;
+  document.getElementById('lbl-back').textContent        = t.back;
+  document.getElementById('lbl-stats').textContent       = t.stats;
+  document.getElementById('tab-today').textContent       = t.tabToday;
+  document.getElementById('tab-week').textContent        = t.tabWeek;
+  document.getElementById('tab-month').textContent       = t.tabMonth;
+  document.getElementById('lbl-stat-walkin').textContent = t.statWalkin;
+  document.getElementById('lbl-stat-hotel').textContent  = t.statHotel;
+  document.getElementById('lbl-stat-trees').textContent  = t.statTrees;
+  document.getElementById('lbl-log').textContent         = t.log;
+  document.getElementById('lbl-new-tree').textContent    = t.newTree;
+  document.getElementById('langBtn').textContent         = t.langBtn;
+  renderAll();
 }
 
 // ── Config ────────────────────────────────────────────
@@ -567,43 +476,146 @@ let guestCount   = 1;
 let activePeriod = 'month';
 
 // ── Storage ───────────────────────────────────────────
-const STORAGE_KEY = 'sambor3';
+const STORAGE_KEY = 'sambor4';
 
 function loadData() {
   try {
     const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    return {
-      tree:        d.tree        || { num: 1, walkin: 0, hotel: 0 },
-      log:         d.log         || [],
-      completions: d.completions || [],
-    };
+    return { entries: d.entries || [], pending: d.pending || [] };
   } catch(e) {
-    return { tree: { num: 1, walkin: 0, hotel: 0 }, log: [], completions: [] };
+    return { entries: [], pending: [] };
   }
 }
 function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+// ── Tree state (derived from entries) ─────────────────
+function computeTreeState(entries) {
+  const sorted = [...entries].sort((a, b) => a.ts - b.ts);
+  let num = 1, walkin = 0, hotel = 0;
+  for (const e of sorted) {
+    if (e.type === 'completion' || e.type === 'tree_reset') {
+      num++; walkin = 0; hotel = 0;
+    } else if (e.type === 'walkin') {
+      walkin += e.count;
+    } else if (e.type === 'staying') {
+      hotel += e.count;
+    }
+  }
+  return { num, walkin, hotel };
+}
 
 // ── Date helpers ──────────────────────────────────────
 function localDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
+function shortDate(dateStr) {
+  if (!dateStr) return '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [, m, d] = dateStr.split('-').map(Number);
+  return `${months[m-1]} ${d}`;
+}
 
-// ── View switching ────────────────────────────────────
+// ── Sync ──────────────────────────────────────────────
+function updateSyncStatus(status) {
+  document.getElementById('syncDot').className = `sync-dot sync-dot--${status}`;
+}
+
+async function syncEntry(entry) {
+  try {
+    const { error } = await sb.from('entries').upsert(
+      { type: entry.type, room: entry.room || null, count: entry.count,
+        date: entry.date, time: entry.time, ts: entry.ts },
+      { onConflict: 'ts' }
+    );
+    if (!error) {
+      const data = loadData();
+      data.pending = data.pending.filter(ts => ts !== entry.ts);
+      saveData(data);
+    }
+  } catch(e) { /* stays in pending */ }
+}
+
+async function syncPending() {
+  const data = loadData();
+  if (!data.pending.length) return;
+  const toSync = data.entries.filter(e => data.pending.includes(e.ts));
+  for (const entry of toSync) await syncEntry(entry);
+}
+
+async function pullFromSupabase() {
+  try {
+    const { data: remote, error } = await sb.from('entries').select('*');
+    if (error || !remote) return;
+    const local = loadData();
+    const pendingSet  = new Set(local.pending);
+    const pendingEntries = local.entries.filter(e => pendingSet.has(e.ts));
+    const remoteSet   = new Set(remote.map(e => e.ts));
+    local.entries = [...remote, ...pendingEntries.filter(e => !remoteSet.has(e.ts))];
+    saveData(local);
+    renderAll();
+  } catch(e) { /* offline */ }
+}
+
+let realtimeChannel = null;
+
+function subscribeRealtime() {
+  if (realtimeChannel) return;
+  realtimeChannel = sb.channel('entries-sync')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'entries' },
+      ({ new: entry }) => {
+        const data = loadData();
+        if (data.entries.some(e => e.ts === entry.ts)) return;
+        data.entries.push(entry);
+        saveData(data);
+        renderAll();
+      })
+    .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'entries' },
+      ({ old: entry }) => {
+        const data = loadData();
+        data.entries = data.entries.filter(e => e.ts !== entry.ts);
+        saveData(data);
+        renderAll();
+      })
+    .subscribe();
+}
+
+function unsubscribeRealtime() {
+  if (realtimeChannel) { realtimeChannel.unsubscribe(); realtimeChannel = null; }
+}
+
+async function initSync() {
+  updateSyncStatus('syncing');
+  await syncPending();
+  await pullFromSupabase();
+  subscribeRealtime();
+  updateSyncStatus('online');
+}
+
+window.addEventListener('online', async () => {
+  updateSyncStatus('syncing');
+  await syncPending();
+  await pullFromSupabase();
+  subscribeRealtime();
+  updateSyncStatus('online');
+});
+window.addEventListener('offline', () => {
+  updateSyncStatus('offline');
+  unsubscribeRealtime();
+});
+
+// ── View ──────────────────────────────────────────────
 function showView(v) {
   document.getElementById('viewMain').style.display  = v === 'main'  ? 'flex' : 'none';
   document.getElementById('viewAdmin').style.display = v === 'admin' ? 'flex' : 'none';
-  if (v === 'admin') { renderStats(); renderAdminValues(); }
+  if (v === 'admin') renderAll();
 }
 
 // ── Durian SVG ────────────────────────────────────────
 function makeDurian(cx, cy, s, stage) {
   const pal = [
-    { b: '#3a6e15', sp: '#294e0f' },
-    { b: '#4a8520', sp: '#335a12' },
-    { b: '#5a9a28', sp: '#3d6a18' },
-    { b: '#8aab2e', sp: '#5a7a1e' },
-    { b: '#c8a800', sp: '#907800' },
-    { b: '#d4820a', sp: '#a05a08' },
+    { b: '#3a6e15', sp: '#294e0f' }, { b: '#4a8520', sp: '#335a12' },
+    { b: '#5a9a28', sp: '#3d6a18' }, { b: '#8aab2e', sp: '#5a7a1e' },
+    { b: '#c8a800', sp: '#907800' }, { b: '#d4820a', sp: '#a05a08' },
   ];
   const p = pal[stage];
   const rx = 14 * s, ry = 19 * s;
@@ -611,23 +623,22 @@ function makeDurian(cx, cy, s, stage) {
   for (let i = 0; i < 12; i++) {
     const a  = (i / 12) * Math.PI * 2 - Math.PI / 2;
     const ex = cx + rx * Math.cos(a), ey = cy + ry * Math.sin(a);
-    const dx = ex - cx, dy = ey - cy;
-    const dd = Math.sqrt(dx * dx + dy * dy);
-    const ux = dx / dd, uy = dy / dd;
-    const ox = ex + ux * 9 * s, oy = ey + uy * 9 * s;
-    const pw = 3.5 * s;
-    spk += `<polygon points="${ex - uy*pw},${ey + ux*pw} ${ox},${oy} ${ex + uy*pw},${ey - ux*pw}" fill="${p.sp}"/>`;
+    const dx = ex - cx, dy = ey - cy, dd = Math.sqrt(dx*dx + dy*dy);
+    const ux = dx/dd, uy = dy/dd;
+    const ox = ex + ux*9*s, oy = ey + uy*9*s, pw = 3.5*s;
+    spk += `<polygon points="${ex-uy*pw},${ey+ux*pw} ${ox},${oy} ${ex+uy*pw},${ey-ux*pw}" fill="${p.sp}"/>`;
   }
   return `<g>${spk}
     <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${p.b}"/>
-    <ellipse cx="${cx - rx*.25}" cy="${cy - ry*.28}" rx="${rx*.28}" ry="${ry*.18}" fill="rgba(255,255,255,.18)"/>
-    <line x1="${cx}" y1="${cy - ry}" x2="${cx + 2*s}" y2="${cy - ry - 8*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5, 2*s)}" stroke-linecap="round"/>
+    <ellipse cx="${cx-rx*.25}" cy="${cy-ry*.28}" rx="${rx*.28}" ry="${ry*.18}" fill="rgba(255,255,255,.18)"/>
+    <line x1="${cx}" y1="${cy-ry}" x2="${cx+2*s}" y2="${cy-ry-8*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5,2*s)}" stroke-linecap="round"/>
   </g>`;
 }
 
-function renderTree(overrideData) {
-  const data  = overrideData || loadData();
-  const total = data.tree.walkin + data.tree.hotel;
+function renderTree(overrideEntries) {
+  const { entries } = loadData();
+  const state = computeTreeState(overrideEntries ?? entries);
+  const total = state.walkin + state.hotel;
   const stage = getStage(total);
   const t     = T[lang];
 
@@ -652,131 +663,126 @@ function renderTree(overrideData) {
   }
   document.getElementById('treeSvg').innerHTML = html;
   document.getElementById('treeCurrent').textContent  = total;
-  document.getElementById('treeNumLabel').textContent = t.treeNumLabel(data.tree.num || 1);
-  document.getElementById('treeWalkin').textContent   = data.tree.walkin;
-  document.getElementById('treeHotel').textContent    = data.tree.hotel;
+  document.getElementById('treeNumLabel').textContent = t.treeNumLabel(state.num);
+  document.getElementById('treeWalkin').textContent   = state.walkin;
+  document.getElementById('treeHotel').textContent    = state.hotel;
   document.getElementById('treeStage').textContent    = t.stageNames[stage];
 }
 
 // ── Stats ─────────────────────────────────────────────
 function switchTab(period) {
   activePeriod = period;
-  ['today', 'week', 'month'].forEach(p =>
-    document.getElementById('tab-' + p).classList.toggle('active', p === period)
+  ['today','week','month'].forEach(p =>
+    document.getElementById('tab-'+p).classList.toggle('active', p === period)
   );
   renderStats();
 }
 
 function getDateRange(period) {
-  const now   = new Date();
-  const today = localDate(now);
+  const now = new Date(), today = localDate(now);
   if (period === 'today') return { start: today, end: today };
   if (period === 'week') {
-    const day  = now.getDay();
-    const diff = day === 0 ? 6 : day - 1;
+    const diff = now.getDay() === 0 ? 6 : now.getDay() - 1;
     const mon  = new Date(now); mon.setDate(now.getDate() - diff);
     const sun  = new Date(mon); sun.setDate(mon.getDate() + 6);
     return { start: localDate(mon), end: localDate(sun) };
   }
   const y = now.getFullYear(), m = now.getMonth();
-  return { start: localDate(new Date(y, m, 1)), end: localDate(new Date(y, m + 1, 0)) };
+  return { start: localDate(new Date(y,m,1)), end: localDate(new Date(y,m+1,0)) };
 }
 
 function renderStats() {
+  const { entries } = loadData();
   const { start, end } = getDateRange(activePeriod);
-  const data    = loadData();
-  const entries = data.log.filter(e => e.date >= start && e.date <= end);
-  const wi      = entries.filter(e => e.type === 'walkin');
-  const ht      = entries.filter(e => e.type === 'staying');
-  const trees   = data.completions.filter(c => c.date >= start && c.date <= end).length;
-  const t       = T[lang];
+  const pe    = entries.filter(e => e.date >= start && e.date <= end);
+  const wi    = pe.filter(e => e.type === 'walkin');
+  const ht    = pe.filter(e => e.type === 'staying');
+  const trees = pe.filter(e => e.type === 'completion').length;
+  const t = T[lang];
   document.getElementById('statsWalkinGroups').textContent = wi.length;
-  document.getElementById('statsWalkinGuests').textContent = t.guests(wi.reduce((s, e) => s + e.count, 0));
+  document.getElementById('statsWalkinGuests').textContent = t.guests(wi.reduce((s,e) => s+e.count, 0));
   document.getElementById('statsHotelGroups').textContent  = ht.length;
-  document.getElementById('statsHotelGuests').textContent  = t.guests(ht.reduce((s, e) => s + e.count, 0));
+  document.getElementById('statsHotelGuests').textContent  = t.guests(ht.reduce((s,e) => s+e.count, 0));
   document.getElementById('statsTrees').textContent        = trees;
 }
 
-// ── Admin adjustments ─────────────────────────────────
-function renderAdminValues() {
-  const data = loadData();
-  document.getElementById('adjNum').textContent         = data.tree.num || 1;
-  document.getElementById('adjWalkin').textContent      = data.tree.walkin || 0;
-  document.getElementById('adjHotel').textContent       = data.tree.hotel || 0;
-  document.getElementById('adjCompletions').textContent = data.completions.length;
-}
+// ── Log ───────────────────────────────────────────────
+function renderLog() {
+  const { entries } = loadData();
+  const list = document.getElementById('logList');
+  const t    = T[lang];
+  const todayStr = localDate(new Date());
+  const sorted = [...entries].sort((a,b) => b.ts - a.ts).slice(0, 30);
 
-function adjTree(field, delta) {
-  const data = loadData();
-  if (field === 'num') {
-    data.tree.num    = Math.max(1, (data.tree.num    || 1) + delta);
-  } else if (field === 'walkin') {
-    data.tree.walkin = Math.max(0, (data.tree.walkin || 0) + delta);
-  } else if (field === 'hotel') {
-    data.tree.hotel  = Math.max(0, (data.tree.hotel  || 0) + delta);
+  if (sorted.length === 0) {
+    list.innerHTML = `<div class="empty-state">${t.logEmpty}</div>`;
+    return;
   }
-  saveData(data);
-  renderAdminValues();
-  renderTree();
+  list.innerHTML = '';
+  sorted.forEach(entry => {
+    const item  = document.createElement('div');
+    item.className = 'log-item';
+    const dp    = entry.date && entry.date !== todayStr ? `${shortDate(entry.date)}  ` : '';
+    const left  = document.createElement('span');
+
+    if (entry.type === 'walkin' || entry.type === 'staying') {
+      left.textContent = `${dp}${entry.time}  👤${entry.count}${entry.room ? '  Rm '+entry.room : ''}`;
+    } else if (entry.type === 'completion') {
+      left.textContent = `${dp}${entry.time}  🌳 Tree complete`;
+    } else {
+      left.textContent = `${dp}${entry.time}  🔄 New tree`;
+    }
+
+    const badge = document.createElement('span');
+    if (entry.type === 'walkin') {
+      badge.className = 'log-badge walkin'; badge.textContent = 'Walk-in';
+    } else if (entry.type === 'staying') {
+      badge.className = 'log-badge staying'; badge.textContent = 'Staying';
+    } else {
+      badge.className = 'log-badge event';
+      badge.textContent = entry.type === 'completion' ? 'Complete' : 'Reset';
+    }
+
+    const del = document.createElement('button');
+    del.className = 'log-del'; del.textContent = '×';
+    del.onclick = () => deleteLogEntry(entry.ts);
+
+    item.append(left, badge, del);
+    list.appendChild(item);
+  });
 }
 
-function adjCompletions(delta) {
-  const data = loadData();
-  if (delta > 0) {
-    data.completions.unshift({ date: localDate(new Date()), ts: Date.now() });
-  } else if (delta < 0 && data.completions.length > 0) {
-    data.completions.shift();
-  }
-  saveData(data);
-  renderAdminValues();
-  renderStats();
-}
-
-function confirmNewTree() {
-  if (!confirm(T[lang].newTreeConfirm)) return;
-  const data = loadData();
-  data.tree = { num: (data.tree.num || 1) + 1, walkin: 0, hotel: 0 };
-  saveData(data);
-  renderAdminValues();
-  renderTree();
-}
+function renderAll() { renderTree(); renderStats(); renderLog(); }
 
 // ── Guest type ────────────────────────────────────────
 function selectType(type) {
-  selectedType = type;
-  selectedRoom = null;
-  document.getElementById('btn-walkin').classList.toggle('selected',  type === 'walkin');
-  document.getElementById('btn-staying').classList.toggle('selected', type === 'staying');
+  selectedType = type; selectedRoom = null;
+  document.getElementById('btn-walkin').classList.toggle('selected',  type==='walkin');
+  document.getElementById('btn-staying').classList.toggle('selected', type==='staying');
   const rs = document.getElementById('roomSection');
-  rs.classList.toggle('visible', type === 'staying');
+  rs.classList.toggle('visible', type==='staying');
   if (type === 'staying') renderRooms();
   checkSubmit();
 }
-
 function renderRooms() {
   const grid = document.getElementById('roomGrid');
   grid.innerHTML = '';
   ROOMS.forEach(r => {
     const btn = document.createElement('button');
-    btn.className   = 'room-btn' + (selectedRoom === r ? ' selected' : '');
-    btn.textContent = r;
-    btn.onclick     = () => selectRoom(r);
+    btn.className = 'room-btn' + (selectedRoom===r?' selected':'');
+    btn.textContent = r; btn.onclick = () => selectRoom(r);
     grid.appendChild(btn);
   });
 }
 function selectRoom(r) { selectedRoom = r; renderRooms(); checkSubmit(); }
-
 function changeCount(delta) {
-  guestCount = Math.max(1, Math.min(20, guestCount + delta));
+  guestCount = Math.max(1, Math.min(20, guestCount+delta));
   document.getElementById('countNum').textContent = guestCount;
 }
-
 function checkSubmit() {
   document.getElementById('submitBtn').disabled =
-    !(selectedType && (selectedType === 'walkin' || selectedRoom));
+    !(selectedType && (selectedType==='walkin' || selectedRoom));
 }
-
-// ── Submit ────────────────────────────────────────────
 function resetForm() {
   selectedType = null; selectedRoom = null; guestCount = 1;
   document.getElementById('countNum').textContent = '1';
@@ -785,101 +791,88 @@ function resetForm() {
   document.getElementById('roomSection').classList.remove('visible');
 }
 
-function handleSubmit() {
-  const data      = loadData();
-  const prevTotal = data.tree.walkin + data.tree.hotel;
-  const today     = localDate(new Date());
-  const time      = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  const t         = T[lang];
+// ── Submit ────────────────────────────────────────────
+async function handleSubmit() {
+  const data = loadData();
+  const prevState = computeTreeState(data.entries);
+  const prevTotal = prevState.walkin + prevState.hotel;
+  const today = localDate(new Date());
+  const time  = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  const ts    = Date.now();
+  const t     = T[lang];
 
-  if (selectedType === 'walkin') data.tree.walkin += guestCount;
-  else                           data.tree.hotel  += guestCount;
+  const entry = { type: selectedType, room: selectedRoom, count: guestCount, date: today, time, ts };
+  data.entries.push(entry);
+  data.pending.push(ts);
 
-  data.log.unshift({ type: selectedType, room: selectedRoom, count: guestCount, date: today, ts: Date.now(), time });
-
-  const newTotal     = data.tree.walkin + data.tree.hotel;
-  const completedNum = data.tree.num || 1;
+  const newState = computeTreeState(data.entries);
+  const newTotal = newState.walkin + newState.hotel;
 
   if (newTotal >= 100) {
-    data.completions.unshift({ date: today, ts: Date.now() });
-    const snapshot = { tree: { ...data.tree } };
-    data.tree = { num: completedNum + 1, walkin: 0, hotel: 0 };
+    const completedNum = newState.num;
+    const cTs    = ts + 1;
+    const cEntry = { type: 'completion', count: 0, date: today, time, ts: cTs };
+    data.entries.push(cEntry);
+    data.pending.push(cTs);
     saveData(data);
 
-    renderTree(snapshot);
+    renderTree(data.entries.filter(e => e.ts !== cTs));
     renderLog();
     showToast(t.toastComplete(completedNum));
     setTimeout(() => launchConfetti(), 300);
 
     resetForm();
     document.getElementById('submitBtn').disabled = true;
-    setTimeout(() => { renderTree(); checkSubmit(); }, 3000);
+    setTimeout(() => { renderAll(); checkSubmit(); }, 3000);
+
+    syncEntry(entry);
+    syncEntry(cEntry);
 
   } else {
     saveData(data);
-    showToast(selectedType === 'walkin'
+    showToast(selectedType==='walkin'
       ? t.toastWalkin(guestCount)
       : t.toastStaying(guestCount, selectedRoom));
 
-    if (MILESTONES.some(m => newTotal >= m && prevTotal < m)) {
+    if (MILESTONES.some(m => newTotal>=m && prevTotal<m)) {
       setTimeout(() => { showToast(t.toastMile(newTotal)); launchConfetti(); }, 700);
     }
-
     resetForm();
-    renderTree();
-    renderLog();
+    renderAll();
     checkSubmit();
+    syncEntry(entry);
   }
 }
 
-// ── Log ───────────────────────────────────────────────
-function shortDate(dateStr) {
-  if (!dateStr) return '';
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const parts = dateStr.split('-');
-  return `${months[Number(parts[1]) - 1]} ${Number(parts[2])}`;
-}
-
-function renderLog() {
-  const data    = loadData();
-  const list    = document.getElementById('logList');
-  const t       = T[lang];
-  const todayStr = localDate(new Date());
-
-  if (data.log.length === 0) {
-    list.innerHTML = `<div class="empty-state">${t.logEmpty}</div>`;
-    return;
-  }
-  list.innerHTML = '';
-  data.log.slice(0, 30).forEach((entry, i) => {
-    const item  = document.createElement('div');
-    item.className = 'log-item';
-
-    const left  = document.createElement('span');
-    const datePrefix = entry.date && entry.date !== todayStr ? `${shortDate(entry.date)}  ` : '';
-    left.textContent = `${datePrefix}${entry.time}  👤${entry.count}${entry.room ? '  Rm ' + entry.room : ''}`;
-
-    const badge = document.createElement('span');
-    badge.className   = 'log-badge ' + entry.type;
-    badge.textContent = entry.type === 'walkin' ? 'Walk-in' : 'Staying';
-
-    const del = document.createElement('button');
-    del.className = 'log-del';
-    del.textContent = '×';
-    del.onclick = () => deleteLogEntry(i);
-
-    item.append(left, badge, del);
-    list.appendChild(item);
-  });
-}
-
-function deleteLogEntry(index) {
+// ── Delete ────────────────────────────────────────────
+async function deleteLogEntry(ts) {
+  if (!navigator.onLine) { showToast(T[lang].offlineDelete); return; }
   if (!confirm(T[lang].deleteConfirm)) return;
-  const data = loadData();
-  data.log.splice(index, 1);
+  try {
+    const { error } = await sb.from('entries').delete().eq('ts', ts);
+    if (error) throw error;
+    const data = loadData();
+    data.entries = data.entries.filter(e => e.ts !== ts);
+    data.pending = data.pending.filter(t => t !== ts);
+    saveData(data);
+    renderAll();
+  } catch(e) {
+    showToast(T[lang].deleteFailed);
+  }
+}
+
+// ── New tree ──────────────────────────────────────────
+async function confirmNewTree() {
+  if (!confirm(T[lang].newTreeConfirm)) return;
+  const today = localDate(new Date());
+  const time  = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  const entry = { type: 'tree_reset', count: 0, date: today, time, ts: Date.now() };
+  const data  = loadData();
+  data.entries.push(entry);
+  data.pending.push(entry.ts);
   saveData(data);
-  renderLog();
-  renderStats();
+  resetForm(); checkSubmit(); renderAll();
+  syncEntry(entry);
 }
 
 // ── Toast ─────────────────────────────────────────────
@@ -892,26 +885,28 @@ function showToast(msg) {
 
 // ── Confetti ──────────────────────────────────────────
 function launchConfetti() {
-  const wrap   = document.getElementById('confettiWrap');
+  const wrap = document.getElementById('confettiWrap');
   const colors = ['#c9a84c','#e8c97a','#a8e6c4','#5a9a28','#d4820a','#ffffff'];
   for (let i = 0; i < 80; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
-    p.style.left              = Math.random() * 100 + 'vw';
-    p.style.background        = colors[Math.floor(Math.random() * colors.length)];
-    p.style.animationDuration = (.8 + Math.random() * 1.4) + 's';
-    p.style.animationDelay    = (Math.random() * .8) + 's';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (.8+Math.random()*1.4)+'s';
+    p.style.animationDelay = (Math.random()*.8)+'s';
     wrap.appendChild(p);
     setTimeout(() => p.remove(), 3000);
   }
 }
 
 // ── Init ──────────────────────────────────────────────
-renderTree();
-renderLog();
-renderStats();
-renderAdminValues();
+renderAll();
 applyLang();
+if (navigator.onLine) {
+  initSync();
+} else {
+  updateSyncStatus('offline');
+}
 </script>
 <script>
   if ('serviceWorker' in navigator) {
