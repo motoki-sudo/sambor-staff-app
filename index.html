@@ -448,7 +448,7 @@ function applyLang() {
 }
 
 // ── Config ────────────────────────────────────────────
-const ROOMS      = Array.from({ length: 24 }, (_, i) => String(101 + i));
+const ROOMS      = [...Array.from({length:12},(_,i)=>String(i+1)), ...Array.from({length:7},(_,i)=>String(i+14))];
 const MILESTONES = [10, 20, 30, 50];
 
 const DURIAN_POS = [
