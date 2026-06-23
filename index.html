@@ -194,6 +194,16 @@
   }
   .log-del:active { color: rgba(255,100,100,.9); }
 
+  /* ── Export button ── */
+  .export-btn {
+    width: 100%; padding: 16px; background: rgba(66,133,244,.12);
+    border: 1px solid rgba(66,133,244,.35); border-radius: var(--radius);
+    color: #a8c8f8; font-size: 14px; font-weight: 600;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: background .15s;
+  }
+  .export-btn:not(:disabled):active { background: rgba(66,133,244,.22); }
+  .export-btn:disabled { opacity: .5; cursor: not-allowed; }
+
   /* ── Danger button ── */
   .danger-btn {
     width: 100%; padding: 14px; background: transparent;
@@ -333,6 +343,8 @@
       </div>
     </div>
 
+    <button class="export-btn" id="exportBtn" onclick="exportToSheets()">📊 Export to Google Sheets</button>
+
     <div class="card">
       <div class="section-label" id="lbl-log">Recent Records</div>
       <div class="log-list log-list--admin" id="logList"></div>
@@ -380,6 +392,10 @@ const T = {
     deleteConfirm: 'Delete this record?\nSummary stats will update automatically.',
     offlineDelete: 'Deletion requires internet connection.',
     deleteFailed:  'Delete failed. Please try again.',
+    exportBtn:     '📊 Export to Google Sheets',
+    exporting:     'Exporting...',
+    exportSuccess: n => `✅ ${n} records exported to Google Sheets!`,
+    exportFailed:  '❌ Export failed. Please try again.',
     toastWalkin:   n => `✅ ${n} walk-in guest${n > 1 ? 's' : ''} recorded!`,
     toastStaying:  (n, room) => `✅ Room ${room} — ${n} guest${n > 1 ? 's' : ''}!`,
     toastMile:     total => `🌳 ${total} guests! Durian is ripening!`,
@@ -410,6 +426,10 @@ const T = {
     deleteConfirm: 'លុបកំណត់ត្រានេះ?\nស្ថិតិនឹងត្រូវបានអាប់ដេត។',
     offlineDelete: 'ត្រូវការ internet ដើម្បីលុប។',
     deleteFailed:  'លុបមិនបាន។ សូមព្យាយាមម្ដងទៀត។',
+    exportBtn:     '📊 Export to Google Sheets',
+    exporting:     'កំពុង Export...',
+    exportSuccess: n => `✅ ${n} កំណត់ត្រាត្រូវបាន Export!`,
+    exportFailed:  '❌ Export មិនបាន។ សូមព្យាយាមម្ដងទៀត។',
     toastWalkin:   n => `✅ ភ្ញៀវ ${n} នាក់!`,
     toastStaying:  (n, room) => `✅ បន្ទប់ ${room} — ${n} នាក់!`,
     toastMile:     total => `🌳 ភ្ញៀវ ${total} នាក់! Durian ចាប់ផ្ដើមទុំ!`,
@@ -443,6 +463,7 @@ function applyLang() {
   document.getElementById('lbl-stat-trees').textContent  = t.statTrees;
   document.getElementById('lbl-log').textContent         = t.log;
   document.getElementById('lbl-new-tree').textContent    = t.newTree;
+  document.getElementById('exportBtn').textContent       = t.exportBtn;
   document.getElementById('langBtn').textContent         = t.langBtn;
   renderAll();
 }
@@ -858,6 +879,29 @@ async function deleteLogEntry(ts) {
     renderAll();
   } catch(e) {
     showToast(T[lang].deleteFailed);
+  }
+}
+
+// ── Export to Google Sheets ───────────────────────────
+async function exportToSheets() {
+  const btn = document.getElementById('exportBtn');
+  const t   = T[lang];
+  btn.disabled    = true;
+  btn.textContent = t.exporting;
+  try {
+    const res  = await fetch('/api/export-sheets', { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      showToast(t.exportSuccess(data.rows));
+    } else {
+      throw new Error(data.error);
+    }
+  } catch(e) {
+    showToast(t.exportFailed);
+    console.error(e);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = t.exportBtn;
   }
 }
 
