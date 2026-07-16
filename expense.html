@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Sambor Expense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--card:#1a1d27;--border:rgba(255,255,255,.08);
+  --text:#e8eaf0;--dim:rgba(255,255,255,.45);--radius:14px;
+  --m:#f59e0b;--hk:#06b6d4;--b:#10b981;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg);z-index:10;gap:8px;
+}
+.hdr-title{font-size:15px;font-weight:600;flex:1;text-align:center}
+.hdr-right{display:flex;gap:6px}
+.hdr-btn{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  color:var(--dim);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;
+  padding:6px 10px;cursor:pointer;white-space:nowrap;line-height:1;
+}
+.hdr-btn:active{color:var(--text)}
+
+.content{flex:1;padding:24px 20px;display:flex;flex-direction:column;gap:24px}
+.slabel{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px}
+
+/* Dept */
+.dept-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dept-btn{
+  border:2px solid var(--border);border-radius:var(--radius);background:var(--card);
+  cursor:pointer;padding:18px 8px 14px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;transition:border-color .15s,box-shadow .15s;
+}
+.dept-code{font-size:22px;font-weight:700;line-height:1}
+.dept-lbl{font-size:9px;font-weight:500;color:var(--dim);text-align:center;line-height:1.3}
+.dept-btn[data-dept="M"]  .dept-code{color:var(--m)}
+.dept-btn[data-dept="M"] {border-color:rgba(245,158,11,.2)}
+.dept-btn[data-dept="HK"] .dept-code{color:var(--hk)}
+.dept-btn[data-dept="HK"]{border-color:rgba(6,182,212,.2)}
+.dept-btn[data-dept="B"]  .dept-code{color:var(--b)}
+.dept-btn[data-dept="B"] {border-color:rgba(16,185,129,.2)}
+.dept-btn.sel[data-dept="M"] {border-color:var(--m);box-shadow:0 0 0 1px var(--m),0 0 20px rgba(245,158,11,.2)}
+.dept-btn.sel[data-dept="HK"]{border-color:var(--hk);box-shadow:0 0 0 1px var(--hk),0 0 20px rgba(6,182,212,.2)}
+.dept-btn.sel[data-dept="B"] {border-color:var(--b);box-shadow:0 0 0 1px var(--b),0 0 20px rgba(16,185,129,.2)}
+
+/* Name */
+.name-sel{
+  width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Inter',sans-serif;font-size:15px;
+  padding:14px 40px 14px 16px;-webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='rgba(255,255,255,0.35)' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:18px;
+}
+.name-sel option{background:#1a1d27}
+
+/* Amount */
+.amount-wrap{
+  display:flex;align-items:center;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+}
+.amount-inp{
+  flex:1;background:transparent;border:none;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:28px;font-weight:600;
+  padding:16px 8px 16px 16px;outline:none;min-width:0;text-align:right;
+}
+.amount-inp::placeholder{color:rgba(255,255,255,.18)}
+.amount-sfx{font-size:18px;font-weight:600;color:var(--dim);padding:0 18px 0 4px;flex-shrink:0}
+
+/* Submit */
+.submit-btn{
+  width:100%;padding:18px;border-radius:var(--radius);border:none;
+  background:var(--b);color:#fff;font-family:'Inter',sans-serif;
+  font-size:16px;font-weight:700;cursor:pointer;transition:.15s;
+}
+.submit-btn:disabled{background:rgba(255,255,255,.08);color:rgba(255,255,255,.25);cursor:not-allowed}
+.submit-btn:not(:disabled):active{filter:brightness(.9)}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:calc(env(safe-area-inset-bottom) + 24px);left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:rgba(25,28,40,.96);border:1px solid var(--border);border-radius:40px;
+  padding:10px 22px;font-size:14px;font-weight:500;color:var(--text);
+  white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;
+  z-index:200;pointer-events:none;backdrop-filter:blur(8px);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Confetti */
+#cel{position:fixed;inset:0;pointer-events:none;z-index:100;display:none}
+
+/* Emoji shower */
+.emoji-piece{
+  position:fixed;bottom:-40px;font-size:26px;pointer-events:none;z-index:99;
+  animation:floatUp 1.8s ease-out both;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(-95vh) scale(.8);opacity:0}
+}
+
+/* Admin tabs */
+.tab-row{display:flex;background:var(--card);border-radius:10px;padding:4px;gap:2px}
+.tab-btn{
+  flex:1;padding:8px;border:none;background:transparent;color:var(--dim);
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;
+  border-radius:7px;cursor:pointer;transition:.15s;
+}
+.tab-btn.active{background:rgba(255,255,255,.1);color:var(--text)}
+
+/* Summary */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.stat-card.full{grid-column:1/-1}
+.stat-lbl{font-size:11px;color:var(--dim);margin-bottom:6px}
+.stat-val{font-size:20px;font-weight:700}
+.stat-val.sm{font-size:16px}
+
+/* Entry list */
+.elist{display:flex;flex-direction:column;gap:8px}
+.eitem{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;
+}
+.ebadge{
+  width:38px;height:38px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;
+}
+.ebody{flex:1;min-width:0}
+.ename{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emeta{font-size:11px;color:var(--dim);margin-top:2px}
+.eamt{font-size:14px;font-weight:600;flex-shrink:0}
+.edel{background:none;border:none;color:rgba(255,80,80,.4);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0}
+.edel:active{color:rgba(255,80,80,.9)}
+.empty{text-align:center;color:var(--dim);font-size:13px;padding:32px 0}
+
+/* Export btn */
+.export-btn{
+  width:100%;padding:16px;background:rgba(66,133,244,.12);
+  border:1px solid rgba(66,133,244,.35);border-radius:var(--radius);
+  color:#a8c8f8;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;
+}
+.export-btn:not(:disabled):active{background:rgba(66,133,244,.22)}
+.export-btn:disabled{opacity:.5;cursor:not-allowed}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+<canvas id="cel"></canvas>
+<div id="esh"></div>
+
+<div id="app">
+  <header>
+    <button class="hdr-btn" id="backBtn" onclick="setView('main')" style="visibility:hidden">←</button>
+    <span class="hdr-title" id="hdr-title">💸 Expense</span>
+    <div class="hdr-right">
+      <button class="hdr-btn" id="adminBtn" onclick="setView('admin')">Admin</button>
+      <button class="hdr-btn" id="langBtn" onclick="toggleLang()">ភាសាខ្មែរ</button>
+    </div>
+  </header>
+
+  <!-- Main form -->
+  <div id="main-view" class="content">
+    <div>
+      <div class="slabel" id="lbl-dept">Department</div>
+      <div class="dept-row">
+        <button class="dept-btn" data-dept="M" onclick="selectDept('M')">
+          <span class="dept-code">M</span>
+          <span class="dept-lbl" id="dlbl-M">Maintenance</span>
+        </button>
+        <button class="dept-btn" data-dept="HK" onclick="selectDept('HK')">
+          <span class="dept-code">HK</span>
+          <span class="dept-lbl" id="dlbl-HK">Housekeeping</span>
+        </button>
+        <button class="dept-btn" data-dept="B" onclick="selectDept('B')">
+          <span class="dept-code">B</span>
+          <span class="dept-lbl" id="dlbl-B">Service</span>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="slabel" id="lbl-name">Name</div>
+      <select class="name-sel" id="nameSelect" onchange="updateSubmit()">
+        <option value="">— Select name —</option>
+        <option>Mai Yoshikawa</option>
+        <option>Kaichi Yagi</option>
+        <option>Yuki Yagi</option>
+      </select>
+    </div>
+
+    <div>
+      <div class="slabel" id="lbl-amount">Amount (KHR)</div>
+      <div class="amount-wrap">
+        <input class="amount-inp" id="amountInp" type="text" inputmode="numeric"
+               placeholder="0" oninput="fmtAmount();updateSubmit()">
+        <span class="amount-sfx">₭</span>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="handleSubmit()" disabled>✓ Submit</button>
+  </div>
+
+  <!-- Admin view -->
+  <div id="admin-view" class="content" style="display:none">
+    <div class="tab-row">
+      <button class="tab-btn" id="tab-today" onclick="setTab('today')">Today</button>
+      <button class="tab-btn" id="tab-week"  onclick="setTab('week')">This Week</button>
+      <button class="tab-btn active" id="tab-month" onclick="setTab('month')">This Month</button>
+    </div>
+    <div id="summary-area"></div>
+    <div id="entry-list"></div>
+    <button class="export-btn" id="adminExportBtn" onclick="adminExport()">📊 Export to Sheets</button>
+  </div>
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────
+const STORAGE_KEY = 'sambor-expense-v1';
+
+const DEPT_CFG = {
+  M:  { color: '#f59e0b', bg: 'rgba(245,158,11,.15)' },
+  HK: { color: '#06b6d4', bg: 'rgba(6,182,212,.15)'  },
+  B:  { color: '#10b981', bg: 'rgba(16,185,129,.15)' },
+};
+
+const T = {
+  en: {
+    title:          '💸 Expense',
+    dept:           'Department',
+    name:           'Name',
+    amount:         'Amount (KHR)',
+    namePh:         '— Select name —',
+    submit:         '✓ Submit',
+    submitting:     '⏳ Submitting...',
+    admin:          'Admin',
+    back:           '←',
+    tabToday:       'Today',
+    tabWeek:        'This Week',
+    tabMonth:       'This Month',
+    total:          'Total',
+    exportBtn:      '📊 Export to Sheets',
+    exporting:      'Exporting...',
+    noEntries:      'No records yet.',
+    deleteConf:     'Delete this record?',
+    toastSaved:     '✅ Expense recorded!',
+    toastExported:  n => `✅ ${n} record${n===1?'':'s'} exported!`,
+    toastExportFail:'⚠️ Saved locally. Export failed.',
+    toastDeleted:   'Deleted.',
+    langBtn:        'ភាសាខ្មែរ',
+    depts:          { M: 'Maintenance', HK: 'Housekeeping', B: 'Service' },
+  },
+  km: {
+    title:          '💸 ការចំណាយ',
+    dept:           'នាយកដ្ឋាន',
+    name:           'ឈ្មោះ',
+    amount:         'ចំនួន (KHR)',
+    namePh:         '— ជ្រើសរើសឈ្មោះ —',
+    submit:         '✓ បញ្ជាក់',
+    submitting:     '⏳ កំពុងផ្ញើ...',
+    admin:          'Admin',
+    back:           '←',
+    tabToday:       'ថ្ងៃនេះ',
+    tabWeek:        'សប្ដាហ៍នេះ',
+    tabMonth:       'ខែនេះ',
+    total:          'សរុប',
+    exportBtn:      '📊 Export to Sheets',
+    exporting:      'កំពុង Export...',
+    noEntries:      'មិនទាន់មានទិន្នន័យ។',
+    deleteConf:     'លុបកំណត់ត្រានេះ?',
+    toastSaved:     '✅ ការចំណាយត្រូវបានកត់ត្រា!',
+    toastExported:  n => `✅ ${n} កំណត់ត្រាត្រូវបាន Export!`,
+    toastExportFail:'⚠️ រក្សាទុកក្នុងម៉ាស៊ីន។ Export មិនបាន។',
+    toastDeleted:   'បានលុប។',
+    langBtn:        'English',
+    depts:          { M: 'ថែទាំ', HK: 'Housekeeping', B: 'សេវាកម្ម' },
+  },
+};
+
+// ── State ────────────────────────────────────────────────
+let lang     = 'en';
+let view     = 'main';
+let adminTab = 'month';
+let selDept  = null;
+let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+// ── Init ─────────────────────────────────────────────────
+applyLang();
+renderAdmin();
+
+// ── Helpers ──────────────────────────────────────────────
+function localDate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function localTime(d = new Date()) {
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function fmtKHR(n) { return Number(n).toLocaleString('en-US'); }
+function weekStart(d = new Date()) {
+  const day = d.getDay();
+  const mon = new Date(d);
+  mon.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+  return localDate(mon);
+}
+function monthStart(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+}
+
+// ── Lang ─────────────────────────────────────────────────
+function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
+
+function applyLang() {
+  const t = T[lang];
+  document.getElementById('hdr-title').textContent        = t.title;
+  document.getElementById('lbl-dept').textContent         = t.dept;
+  document.getElementById('lbl-name').textContent         = t.name;
+  document.getElementById('lbl-amount').textContent       = t.amount;
+  document.getElementById('dlbl-M').textContent           = t.depts.M;
+  document.getElementById('dlbl-HK').textContent          = t.depts.HK;
+  document.getElementById('dlbl-B').textContent           = t.depts.B;
+  document.getElementById('nameSelect').options[0].text   = t.namePh;
+  document.getElementById('submitBtn').textContent        = t.submit;
+  document.getElementById('adminBtn').textContent         = t.admin;
+  document.getElementById('backBtn').textContent          = t.back;
+  document.getElementById('langBtn').textContent          = t.langBtn;
+  document.getElementById('adminExportBtn').textContent   = t.exportBtn;
+  document.getElementById('tab-today').textContent        = t.tabToday;
+  document.getElementById('tab-week').textContent         = t.tabWeek;
+  document.getElementById('tab-month').textContent        = t.tabMonth;
+  if (view === 'admin') renderAdmin();
+}
+
+// ── View ─────────────────────────────────────────────────
+function setView(v) {
+  view = v;
+  const isAdmin = v === 'admin';
+  document.getElementById('main-view').style.display  = isAdmin ? 'none'    : 'flex';
+  document.getElementById('admin-view').style.display = isAdmin ? 'flex'    : 'none';
+  document.getElementById('backBtn').style.visibility = isAdmin ? 'visible' : 'hidden';
+  document.getElementById('adminBtn').style.display   = isAdmin ? 'none'    : '';
+  if (isAdmin) renderAdmin();
+}
+
+// ── Dept ─────────────────────────────────────────────────
+function selectDept(id) {
+  selDept = id;
+  document.querySelectorAll('.dept-btn').forEach(b =>
+    b.classList.toggle('sel', b.dataset.dept === id)
+  );
+  updateSubmit();
+}
+
+// ── Amount ───────────────────────────────────────────────
+function fmtAmount() {
+  const inp = document.getElementById('amountInp');
+  const raw = inp.value.replace(/[^\d]/g, '');
+  inp.value = raw ? Number(raw).toLocaleString('en-US') : '';
+}
+function getRawAmount() {
+  return parseInt(document.getElementById('amountInp').value.replace(/,/g, ''), 10) || 0;
+}
+
+function updateSubmit() {
+  const name = document.getElementById('nameSelect').value;
+  document.getElementById('submitBtn').disabled = !(selDept && name && getRawAmount() > 0);
+}
+
+// ── Submit ───────────────────────────────────────────────
+async function handleSubmit() {
+  const name = document.getElementById('nameSelect').value;
+  const amt  = getRawAmount();
+  if (!selDept || !name || amt <= 0) return;
+
+  const btn = document.getElementById('submitBtn');
+  const t   = T[lang];
+  btn.disabled = true;
+  btn.textContent = t.submitting;
+
+  const now   = new Date();
+  const entry = {
+    id:     crypto.randomUUID(),
+    dept:   selDept,
+    name:   name,
+    amount: amt,
+    date:   localDate(now),
+    time:   localTime(now),
+    ts:     now.toISOString(),
+  };
+
+  expenses.push(entry);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+
+  // Reset form
+  selDept = null;
+  document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('nameSelect').value = '';
+  document.getElementById('amountInp').value  = '';
+  btn.textContent = t.submit;
+  btn.disabled    = true;
+
+  celebrate();
+  showToast(t.toastSaved);
+
+  try {
+    const res  = await fetch('/api/export-expense', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ entries: expenses }),
+    });
+    const data = await res.json();
+    if (data.ok) setTimeout(() => showToast(t.toastExported(expenses.length)), 1600);
+    else throw new Error(data.error);
+  } catch(e) {
+    setTimeout(() => showToast(t.toastExportFail), 1600);
+    console.error(e);
+  }
+}
+
+// ── Admin export ─────────────────────────────────────────
+async function adminExport() {
+  const btn = document.getElementById('adminExportBtn');
+  const t   = T[lang];
+  btn.disabled    = true;
+  btn.textContent = t.exporting;
+  try {
+    const res  = await fetch('/api/export-expense', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ entries: expenses }),
+    });
+    const data = await res.json();
+    if (data.ok) showToast(t.toastExported(expenses.length));
+    else throw new Error(data.error);
+  } catch(e) {
+    showToast(t.toastExportFail);
+    console.error(e);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = t.exportBtn;
+  }
+}
+
+// ── Delete ───────────────────────────────────────────────
+async function deleteEntry(id) {
+  if (!confirm(T[lang].deleteConf)) return;
+  expenses = expenses.filter(e => e.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  showToast(T[lang].toastDeleted);
+  renderAdmin();
+  try {
+    await fetch('/api/export-expense', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ entries: expenses }),
+    });
+  } catch(e) { console.error(e); }
+}
+
+// ── Admin render ─────────────────────────────────────────
+function setTab(tab) {
+  adminTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  renderAdmin();
+}
+
+function getFiltered() {
+  const today = localDate();
+  const ws    = weekStart();
+  const ms    = monthStart();
+  return expenses.filter(e =>
+    adminTab === 'today' ? e.date === today :
+    adminTab === 'week'  ? e.date >= ws     : e.date >= ms
+  );
+}
+
+function renderAdmin() {
+  const t    = T[lang];
+  const data = getFiltered();
+  const total = data.reduce((s, e) => s + e.amount, 0);
+  const byDept = {};
+  for (const e of data) byDept[e.dept] = (byDept[e.dept] || 0) + e.amount;
+  const deptKeys = Object.keys(DEPT_CFG).filter(k => byDept[k]);
+
+  document.getElementById('summary-area').innerHTML = `
+    <div class="summary-grid">
+      <div class="stat-card full">
+        <div class="stat-lbl">${t.total}</div>
+        <div class="stat-val">₭ ${fmtKHR(total)}</div>
+      </div>
+      ${deptKeys.map(k => `
+        <div class="stat-card">
+          <div class="stat-lbl" style="color:${DEPT_CFG[k].color}">${k} · ${t.depts[k]}</div>
+          <div class="stat-val sm">₭ ${fmtKHR(byDept[k])}</div>
+        </div>
+      `).join('')}
+    </div>`;
+
+  const sorted = [...data].sort((a, b) => b.ts.localeCompare(a.ts));
+  document.getElementById('entry-list').innerHTML = sorted.length === 0
+    ? `<div class="empty">${t.noEntries}</div>`
+    : `<div class="elist">${sorted.map(e => `
+        <div class="eitem">
+          <div class="ebadge" style="background:${DEPT_CFG[e.dept].bg};color:${DEPT_CFG[e.dept].color}">${e.dept}</div>
+          <div class="ebody">
+            <div class="ename">${e.name}</div>
+            <div class="emeta">${e.date} ${e.time}</div>
+          </div>
+          <div class="eamt">₭ ${fmtKHR(e.amount)}</div>
+          <button class="edel" onclick="deleteEntry('${e.id}')">✕</button>
+        </div>`).join('')}
+      </div>`;
+}
+
+// ── Toast ────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ── Celebration ──────────────────────────────────────────
+const CEL_COLORS = ['#f59e0b','#06b6d4','#10b981','#f472b6','#818cf8','#fb7185','#fde68a'];
+
+function celebrate() {
+  [confettiRain, fireworkBurst, emojiShower][Math.floor(Math.random() * 3)]();
+}
+
+function confettiRain() {
+  const canvas  = document.getElementById('cel');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+
+  const pieces = Array.from({ length: 70 }, () => ({
+    x:   Math.random() * canvas.width,
+    y:   Math.random() * -canvas.height * .5,
+    vx:  (Math.random() - .5) * 4,
+    vy:  Math.random() * 3 + 2,
+    rot: Math.random() * Math.PI * 2,
+    rv:  (Math.random() - .5) * .15,
+    w:   Math.random() * 10 + 6,
+    h:   Math.random() * 5 + 3,
+    col: CEL_COLORS[Math.floor(Math.random() * CEL_COLORS.length)],
+    circ: Math.random() > .65,
+  }));
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    for (const p of pieces) {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rv;
+      if (p.y < canvas.height + 20) alive = true;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.col;
+      if (p.circ) { ctx.beginPath(); ctx.arc(0, 0, p.w/2, 0, Math.PI*2); ctx.fill(); }
+      else { ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); }
+      ctx.restore();
+    }
+    if (alive) requestAnimationFrame(tick);
+    else canvas.style.display = 'none';
+  }
+  requestAnimationFrame(tick);
+}
+
+function fireworkBurst() {
+  const canvas  = document.getElementById('cel');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  const cx  = canvas.width / 2;
+  const cy  = canvas.height / 2;
+
+  const sparks = Array.from({ length: 60 }, (_, i) => {
+    const angle = (i / 60) * Math.PI * 2;
+    const speed = Math.random() * 7 + 3;
+    return {
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1,
+      col: CEL_COLORS[Math.floor(Math.random() * CEL_COLORS.length)],
+    };
+  });
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    for (const s of sparks) {
+      s.x += s.vx; s.y += s.vy; s.vy += .15; s.life -= .022;
+      if (s.life > 0) alive = true;
+      ctx.globalAlpha = Math.max(0, s.life);
+      ctx.fillStyle   = s.col;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (alive) requestAnimationFrame(tick);
+    else canvas.style.display = 'none';
+  }
+  requestAnimationFrame(tick);
+}
+
+function emojiShower() {
+  const container = document.getElementById('esh');
+  const emojis    = ['💸','🎉','✨','🌟','💰','🎊','🥳'];
+  container.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const el            = document.createElement('div');
+    el.className        = 'emoji-piece';
+    el.textContent      = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left       = `${Math.random() * 88 + 6}%`;
+    el.style.animationDelay    = `${Math.random() * .7}s`;
+    el.style.animationDuration = `${1.3 + Math.random() * .9}s`;
+    container.appendChild(el);
+  }
+  setTimeout(() => { container.innerHTML = ''; }, 2600);
+}
+</script>
+</body>
+</html>
