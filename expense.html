@@ -365,7 +365,7 @@ const T = {
 };
 
 // ── State ────────────────────────────────────────────────
-let lang     = 'en';
+let lang     = localStorage.getItem('lang') || 'en';
 let view     = 'main';
 let adminTab = 'month';
 let selDept  = null;
@@ -415,7 +415,7 @@ function monthStart(d = new Date()) {
 }
 
 // ── Lang ─────────────────────────────────────────────────
-function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
+function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; localStorage.setItem('lang', lang); applyLang(); }
 
 function applyLang() {
   const t = T[lang];
