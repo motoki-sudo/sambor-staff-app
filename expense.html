@@ -241,8 +241,10 @@ header{
 
 <script>
 // ── Config ───────────────────────────────────────────────
-const STORAGE_KEY      = 'sambor-expense-v1';
+const STORAGE_KEY       = 'sambor-expense-v1';
 const STAFF_STORAGE_KEY = 'sambor-staff-v1';
+const SB_URL            = 'https://xbtxluhvyuobcdipsjhe.supabase.co';
+const SB_KEY            = 'sb_publishable_gFHEUXtGlz2-8TNcteJKgQ_ogSRWBdz';
 
 const DEPT_CFG = {
   FO: { color: '#60a5fa', bg: 'rgba(96,165,250,.15)',  name: 'Front Office'  },
@@ -356,6 +358,22 @@ renderDeptButtons();
 renderNameOptions(null);
 applyLang();
 renderAdmin();
+loadExpenses();
+
+// ── Supabase sync ────────────────────────────────────────
+async function loadExpenses() {
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/expenses?order=ts.asc&select=*`, {
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` },
+    });
+    if (!res.ok) throw new Error(res.status);
+    expenses = await res.json();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+    if (view === 'admin') renderAdmin();
+  } catch(e) {
+    console.warn('Supabase load failed, using cache', e);
+  }
+}
 
 // ── Helpers ──────────────────────────────────────────────
 function localDate(d = new Date()) {
@@ -408,6 +426,7 @@ function setView(v) {
   if (isAdmin) {
     document.getElementById('adminExportBtn').style.display = adminTab === 'staff' ? 'none' : '';
     renderAdmin();
+    loadExpenses();
   }
 }
 
@@ -563,13 +582,17 @@ async function handleSubmit() {
   showToast(t.toastSaved);
 
   try {
-    const res  = await fetch('/api/export-expense', {
+    // Write to Supabase first, then export (export-expense reads from Supabase)
+    const sbRes = await fetch(`${SB_URL}/rest/v1/expenses`, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ entries: expenses }),
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify(entry),
     });
+    if (!sbRes.ok) throw new Error(`Supabase: ${sbRes.status}`);
+
+    const res  = await fetch('/api/export-expense', { method: 'POST' });
     const data = await res.json();
-    if (data.ok) setTimeout(() => showToast(t.toastExported(expenses.length)), 1600);
+    if (data.ok) setTimeout(() => showToast(t.toastExported(data.rows)), 1600);
     else throw new Error(data.error);
   } catch(e) {
     setTimeout(() => showToast(t.toastExportFail), 1600);
@@ -584,13 +607,9 @@ async function adminExport() {
   btn.disabled    = true;
   btn.textContent = t.exporting;
   try {
-    const res  = await fetch('/api/export-expense', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ entries: expenses }),
-    });
+    const res  = await fetch('/api/export-expense', { method: 'POST' });
     const data = await res.json();
-    if (data.ok) showToast(t.toastExported(expenses.length));
+    if (data.ok) showToast(t.toastExported(data.rows));
     else throw new Error(data.error);
   } catch(e) {
     showToast(t.toastExportFail);
@@ -609,11 +628,11 @@ async function deleteEntry(id) {
   showToast(T[lang].toastDeleted);
   renderAdmin();
   try {
-    await fetch('/api/export-expense', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ entries: expenses }),
+    await fetch(`${SB_URL}/rest/v1/expenses?id=eq.${id}`, {
+      method:  'DELETE',
+      headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` },
     });
+    await fetch('/api/export-expense', { method: 'POST' });
   } catch(e) { console.error(e); }
 }
 

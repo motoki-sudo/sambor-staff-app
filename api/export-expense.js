@@ -45,12 +45,15 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Missing environment variables' });
   }
 
-  const entries = req.body?.entries;
-  if (!Array.isArray(entries)) {
-    return res.status(400).json({ error: 'Invalid request body' });
-  }
-
   try {
+    // Read all expense records from Supabase
+    const sbRes = await fetch(
+      'https://xbtxluhvyuobcdipsjhe.supabase.co/rest/v1/expenses?order=ts.asc&select=*',
+      { headers: { apikey: 'sb_publishable_gFHEUXtGlz2-8TNcteJKgQ_ogSRWBdz', Authorization: 'Bearer sb_publishable_gFHEUXtGlz2-8TNcteJKgQ_ogSRWBdz' } }
+    );
+    const entries = await sbRes.json();
+    if (!Array.isArray(entries)) throw new Error(`Supabase error: ${JSON.stringify(entries)}`);
+
     const token = await getGoogleToken(email, privateKey);
 
     // Get spreadsheet info to find Sheet2
