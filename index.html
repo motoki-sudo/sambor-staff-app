@@ -609,9 +609,7 @@ let statsView    = 'num';
 
 // ── Storage ───────────────────────────────────────────
 const STORAGE_KEY  = 'sambor4';
-const DEL_LOG_KEY  = 'sambor-dellog';
-function loadDelLog() { try { return JSON.parse(localStorage.getItem(DEL_LOG_KEY)||'[]'); } catch { return []; } }
-function saveDelLog(l) { localStorage.setItem(DEL_LOG_KEY, JSON.stringify(l)); }
+let delLog = [];
 
 function loadData() {
   try {
@@ -711,7 +709,26 @@ function subscribeRealtime() {
         saveData(data);
         renderAll();
       })
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'deletions' },
+      ({ new: del }) => {
+        if (del.source !== 'entry') return;
+        const item = { ...del.data, deletedAt: new Date(del.deleted_at).getTime() };
+        if (delLog.some(d => d.ts === item.ts && d.deletedAt === item.deletedAt)) return;
+        delLog.unshift(item);
+        if (document.getElementById('viewAdmin').style.display !== 'none') renderLog();
+      })
     .subscribe();
+}
+
+async function loadDelLogFromSupabase() {
+  try {
+    const { data, error } = await sb.from('deletions')
+      .select('*').eq('source', 'entry')
+      .order('deleted_at', { ascending: false }).limit(200);
+    if (error || !data) return;
+    delLog = data.map(d => ({ ...d.data, deletedAt: new Date(d.deleted_at).getTime() }));
+    renderLog();
+  } catch(e) { console.warn('dellog fetch failed', e); }
 }
 
 function unsubscribeRealtime() {
@@ -742,7 +759,7 @@ window.addEventListener('offline', () => {
 function showView(v) {
   document.getElementById('viewMain').style.display  = v === 'main'  ? 'flex' : 'none';
   document.getElementById('viewAdmin').style.display = v === 'admin' ? 'flex' : 'none';
-  if (v === 'admin') { renderAll(); loadSettingsUI(); }
+  if (v === 'admin') { renderAll(); loadSettingsUI(); loadDelLogFromSupabase(); }
 }
 
 // ── Durian SVG ────────────────────────────────────────
@@ -988,7 +1005,6 @@ function makePieChart(wiCount, htCount, wiGuests, htGuests, trees, t) {
 // ── Log ───────────────────────────────────────────────
 function renderLog() {
   const { entries } = loadData();
-  const delLog = loadDelLog();
   const list = document.getElementById('logList');
   const t    = T[lang];
   const todayStr = localDate(new Date());
@@ -1142,9 +1158,11 @@ async function deleteLogEntry(ts) {
     const data = loadData();
     const target = data.entries.find(e => e.ts === ts);
     if (target) {
-      const dl = loadDelLog();
-      dl.unshift({ ...target, deletedAt: Date.now() });
-      saveDelLog(dl.slice(0, 200));
+      await sb.from('deletions').insert({
+        source: 'entry', original_id: String(ts),
+        data: target, deleted_at: new Date().toISOString(),
+      });
+      delLog.unshift({ ...target, deletedAt: Date.now() });
     }
     data.entries = data.entries.filter(e => e.ts !== ts);
     data.pending = data.pending.filter(t => t !== ts);

@@ -243,9 +243,7 @@ header{
 // ── Config ───────────────────────────────────────────────
 const STORAGE_KEY       = 'sambor-expense-v1';
 const STAFF_STORAGE_KEY = 'sambor-staff-v1';
-const EXP_DEL_KEY       = 'sambor-expense-dellog';
-function loadExpDelLog() { try { return JSON.parse(localStorage.getItem(EXP_DEL_KEY)||'[]'); } catch { return []; } }
-function saveExpDelLog(l) { localStorage.setItem(EXP_DEL_KEY, JSON.stringify(l)); }
+let expDelLog = [];
 const SB_URL            = 'https://xbtxluhvyuobcdipsjhe.supabase.co';
 const SB_KEY            = 'sb_publishable_gFHEUXtGlz2-8TNcteJKgQ_ogSRWBdz';
 
@@ -431,7 +429,21 @@ function setView(v) {
     document.getElementById('adminExportBtn').style.display = adminTab === 'staff' ? 'none' : '';
     renderAdmin();
     loadExpenses();
+    loadExpDelLog();
   }
+}
+
+async function loadExpDelLog() {
+  try {
+    const res = await fetch(
+      `${SB_URL}/rest/v1/deletions?source=eq.expense&order=deleted_at.desc&limit=200`,
+      { headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` } }
+    );
+    if (!res.ok) return;
+    const data = await res.json();
+    expDelLog = data.map(d => ({ ...d.data, deletedAt: new Date(d.deleted_at).getTime() }));
+    if (view === 'admin' && adminTab !== 'staff') renderAdmin();
+  } catch(e) { console.warn('expDelLog fetch failed', e); }
 }
 
 // ── Dept ─────────────────────────────────────────────────
@@ -629,9 +641,18 @@ async function deleteEntry(id) {
   if (!confirm(T[lang].deleteConf)) return;
   const target = expenses.find(e => e.id === id);
   if (target) {
-    const dl = loadExpDelLog();
-    dl.unshift({ ...target, deletedAt: Date.now() });
-    saveExpDelLog(dl.slice(0, 200));
+    await fetch(`${SB_URL}/rest/v1/deletions`, {
+      method: 'POST',
+      headers: {
+        apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        source: 'expense', original_id: id,
+        data: target, deleted_at: new Date().toISOString(),
+      }),
+    });
+    expDelLog.unshift({ ...target, deletedAt: Date.now() });
   }
   expenses = expenses.filter(e => e.id !== id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
@@ -767,14 +788,14 @@ function renderAdmin() {
     </div>`;
 
   const fallback = { color: '#aaa', bg: 'rgba(170,170,170,.15)' };
-  const delLog   = loadExpDelLog().filter(d => {
+  const relevantDelLog = expDelLog.filter(d => {
     const ds = d.date || '';
     return adminTab==='today' ? ds===localDate() :
            adminTab==='week'  ? ds>=weekStart()  : ds>=monthStart();
   }).map(d => ({ ...d, _deleted: true }));
-  const sorted = [...data.map(e=>({...e,_deleted:false})), ...delLog]
-    .sort((a,b) => (b._deleted?b.deletedAt:b.ts?.localeCompare?.(a.ts)||0) > (a._deleted?a.deletedAt:a.ts?.localeCompare?.(b.ts)||0) ? 1 : -1)
-    .reverse();
+  const getTs = e => e._deleted ? e.deletedAt : new Date(e.ts).getTime();
+  const sorted = [...data.map(e=>({...e,_deleted:false})), ...relevantDelLog]
+    .sort((a, b) => getTs(b) - getTs(a));
   document.getElementById('entry-list').innerHTML = sorted.length === 0
     ? `<div class="empty">${t.noEntries}</div>`
     : `<div class="elist">${sorted.map(e => {
