@@ -140,11 +140,11 @@
   .submit-btn:not(:disabled):active { transform: scale(.98); }
 
   /* ── Admin link ── */
-  .admin-link-row { display: flex; justify-content: center; padding-top: 4px; }
+  .admin-link-row { display: flex; justify-content: center; align-items: center; padding-top: 4px; gap: 4px; }
   .admin-link {
     background: transparent; border: none; color: rgba(245,240,232,.18);
     font-size: 11px; font-family: 'Inter', sans-serif; cursor: pointer;
-    padding: 6px 12px; letter-spacing: .05em;
+    padding: 6px 12px; letter-spacing: .05em; text-decoration: none; display: inline-block;
   }
 
   /* ── Admin view ── */
@@ -304,6 +304,8 @@
 
     <div class="admin-link-row">
       <button class="admin-link" onclick="showView('admin')" id="lbl-admin">Admin</button>
+      <span style="color:rgba(245,240,232,.1)">·</span>
+      <a class="admin-link" href="/expense.html">💸 Expense</a>
     </div>
 
   </div><!-- /viewMain -->

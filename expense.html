@@ -12,7 +12,6 @@
 :root{
   --bg:#0f1117;--card:#1a1d27;--border:rgba(255,255,255,.08);
   --text:#e8eaf0;--dim:rgba(255,255,255,.45);--radius:14px;
-  --m:#f59e0b;--hk:#06b6d4;--b:#10b981;
 }
 html,body{height:100%}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
@@ -38,21 +37,16 @@ header{
 /* Dept */
 .dept-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .dept-btn{
-  border:2px solid var(--border);border-radius:var(--radius);background:var(--card);
-  cursor:pointer;padding:18px 8px 14px;display:flex;flex-direction:column;
-  align-items:center;gap:8px;transition:border-color .15s,box-shadow .15s;
+  border:2px solid rgba(255,255,255,.06);border-radius:var(--radius);background:var(--card);
+  cursor:pointer;padding:16px 6px 12px;display:flex;flex-direction:column;
+  align-items:center;gap:6px;transition:border-color .15s,box-shadow .15s;
 }
-.dept-code{font-size:22px;font-weight:700;line-height:1}
+.dept-code{font-size:18px;font-weight:700;line-height:1;color:var(--dept-color,#fff)}
 .dept-lbl{font-size:9px;font-weight:500;color:var(--dim);text-align:center;line-height:1.3}
-.dept-btn[data-dept="M"]  .dept-code{color:var(--m)}
-.dept-btn[data-dept="M"] {border-color:rgba(245,158,11,.2)}
-.dept-btn[data-dept="HK"] .dept-code{color:var(--hk)}
-.dept-btn[data-dept="HK"]{border-color:rgba(6,182,212,.2)}
-.dept-btn[data-dept="B"]  .dept-code{color:var(--b)}
-.dept-btn[data-dept="B"] {border-color:rgba(16,185,129,.2)}
-.dept-btn.sel[data-dept="M"] {border-color:var(--m);box-shadow:0 0 0 1px var(--m),0 0 20px rgba(245,158,11,.2)}
-.dept-btn.sel[data-dept="HK"]{border-color:var(--hk);box-shadow:0 0 0 1px var(--hk),0 0 20px rgba(6,182,212,.2)}
-.dept-btn.sel[data-dept="B"] {border-color:var(--b);box-shadow:0 0 0 1px var(--b),0 0 20px rgba(16,185,129,.2)}
+.dept-btn.sel{
+  border-color:var(--dept-color);
+  box-shadow:0 0 0 1px var(--dept-color),0 0 20px var(--dept-bg,rgba(255,255,255,.1));
+}
 
 /* Name */
 .name-sel{
@@ -62,7 +56,7 @@ header{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='rgba(255,255,255,0.35)' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 14px center;background-size:18px;
 }
-.name-sel option{background:#1a1d27}
+.name-sel option,.name-sel optgroup{background:#1a1d27}
 
 /* Amount */
 .amount-wrap{
@@ -80,7 +74,7 @@ header{
 /* Submit */
 .submit-btn{
   width:100%;padding:18px;border-radius:var(--radius);border:none;
-  background:var(--b);color:#fff;font-family:'Inter',sans-serif;
+  background:#10b981;color:#fff;font-family:'Inter',sans-serif;
   font-size:16px;font-weight:700;cursor:pointer;transition:.15s;
 }
 .submit-btn:disabled{background:rgba(255,255,255,.08);color:rgba(255,255,255,.25);cursor:not-allowed}
@@ -114,9 +108,9 @@ header{
 /* Admin tabs */
 .tab-row{display:flex;background:var(--card);border-radius:10px;padding:4px;gap:2px}
 .tab-btn{
-  flex:1;padding:8px;border:none;background:transparent;color:var(--dim);
-  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;
-  border-radius:7px;cursor:pointer;transition:.15s;
+  flex:1;padding:8px 4px;border:none;background:transparent;color:var(--dim);
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:500;
+  border-radius:7px;cursor:pointer;transition:.15s;white-space:nowrap;
 }
 .tab-btn.active{background:rgba(255,255,255,.1);color:var(--text)}
 
@@ -154,6 +148,39 @@ header{
 }
 .export-btn:not(:disabled):active{background:rgba(66,133,244,.22)}
 .export-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Staff management */
+.staff-form{display:flex;flex-direction:column;gap:8px}
+.staff-inp{
+  width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Inter',sans-serif;font-size:14px;
+  padding:12px 14px;outline:none;
+}
+.staff-inp:focus{border-color:rgba(255,255,255,.2)}
+.staff-form-row{display:flex;gap:8px}
+.staff-dept-sel{
+  flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:'Inter',sans-serif;font-size:13px;
+  padding:10px 12px;cursor:pointer;-webkit-appearance:none;appearance:none;
+}
+.staff-dept-sel option{background:#1a1d27}
+.staff-add-btn{
+  padding:10px 16px;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.4);
+  border-radius:var(--radius);color:#10b981;font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;
+}
+.staff-add-btn:active{background:rgba(16,185,129,.25)}
+.sitem{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px 12px;display:flex;align-items:center;gap:10px;
+}
+.sname{font-size:14px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sdept-sel{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);font-family:'Inter',sans-serif;font-size:11px;
+  padding:5px 8px;cursor:pointer;flex-shrink:0;
+}
+.sdept-sel option{background:#1a1d27}
 </style>
 </head>
 <body>
@@ -176,29 +203,13 @@ header{
   <div id="main-view" class="content">
     <div>
       <div class="slabel" id="lbl-dept">Department</div>
-      <div class="dept-row">
-        <button class="dept-btn" data-dept="M" onclick="selectDept('M')">
-          <span class="dept-code">M</span>
-          <span class="dept-lbl" id="dlbl-M">Maintenance</span>
-        </button>
-        <button class="dept-btn" data-dept="HK" onclick="selectDept('HK')">
-          <span class="dept-code">HK</span>
-          <span class="dept-lbl" id="dlbl-HK">Housekeeping</span>
-        </button>
-        <button class="dept-btn" data-dept="B" onclick="selectDept('B')">
-          <span class="dept-code">B</span>
-          <span class="dept-lbl" id="dlbl-B">Service</span>
-        </button>
-      </div>
+      <div class="dept-row" id="dept-row"></div>
     </div>
 
     <div>
       <div class="slabel" id="lbl-name">Name</div>
-      <select class="name-sel" id="nameSelect" onchange="updateSubmit()">
+      <select class="name-sel" id="nameSelect" onchange="onNameChange()">
         <option value="">— Select name —</option>
-        <option>Mai Yoshikawa</option>
-        <option>Kaichi Yagi</option>
-        <option>Yuki Yagi</option>
       </select>
     </div>
 
@@ -218,8 +229,9 @@ header{
   <div id="admin-view" class="content" style="display:none">
     <div class="tab-row">
       <button class="tab-btn" id="tab-today" onclick="setTab('today')">Today</button>
-      <button class="tab-btn" id="tab-week"  onclick="setTab('week')">This Week</button>
-      <button class="tab-btn active" id="tab-month" onclick="setTab('month')">This Month</button>
+      <button class="tab-btn" id="tab-week"  onclick="setTab('week')">Week</button>
+      <button class="tab-btn active" id="tab-month" onclick="setTab('month')">Month</button>
+      <button class="tab-btn" id="tab-staff" onclick="setTab('staff')">Staff</button>
     </div>
     <div id="summary-area"></div>
     <div id="entry-list"></div>
@@ -229,13 +241,40 @@ header{
 
 <script>
 // ── Config ───────────────────────────────────────────────
-const STORAGE_KEY = 'sambor-expense-v1';
+const STORAGE_KEY      = 'sambor-expense-v1';
+const STAFF_STORAGE_KEY = 'sambor-staff-v1';
 
 const DEPT_CFG = {
-  M:  { color: '#f59e0b', bg: 'rgba(245,158,11,.15)' },
-  HK: { color: '#06b6d4', bg: 'rgba(6,182,212,.15)'  },
-  B:  { color: '#10b981', bg: 'rgba(16,185,129,.15)' },
+  FO: { color: '#60a5fa', bg: 'rgba(96,165,250,.15)',  name: 'Front Office'  },
+  KT: { color: '#f97316', bg: 'rgba(249,115,22,.15)',  name: 'Kitchen'       },
+  HK: { color: '#06b6d4', bg: 'rgba(6,182,212,.15)',   name: 'House Keeping' },
+  MT: { color: '#8b5cf6', bg: 'rgba(139,92,246,.15)',  name: 'Maintenance'   },
+  GG: { color: '#22c55e', bg: 'rgba(34,197,94,.15)',   name: 'Gard&Garden'   },
+  BR: { color: '#f59e0b', bg: 'rgba(245,158,11,.15)',  name: 'Bar'           },
 };
+
+const DEFAULT_STAFF = [
+  { name: 'Chanthy',   dept: 'FO' },
+  { name: 'Reaksmey',  dept: 'FO' },
+  { name: 'Kannavuth', dept: 'KT' },
+  { name: 'Thearin',   dept: 'KT' },
+  { name: 'Viseth',    dept: 'KT' },
+  { name: 'Bunthim',   dept: 'KT' },
+  { name: 'Chetra',    dept: 'KT' },
+  { name: 'Sokhai',    dept: 'HK' },
+  { name: 'Layseak',   dept: 'HK' },
+  { name: 'Chivorn',   dept: 'HK' },
+  { name: 'Roth',      dept: 'HK' },
+  { name: 'Yorn',      dept: 'MT' },
+  { name: 'Vesena',    dept: 'MT' },
+  { name: 'Bin',       dept: 'GG' },
+  { name: 'Dara',      dept: 'GG' },
+  { name: 'Hong',      dept: 'GG' },
+  { name: 'Saophoam',  dept: 'BR' },
+  { name: 'Soklen',    dept: 'BR' },
+  { name: 'Tola',      dept: 'BR' },
+  { name: 'Sophea',    dept: 'BR' },
+];
 
 const T = {
   en: {
@@ -249,8 +288,9 @@ const T = {
     admin:          'Admin',
     back:           '←',
     tabToday:       'Today',
-    tabWeek:        'This Week',
-    tabMonth:       'This Month',
+    tabWeek:        'Week',
+    tabMonth:       'Month',
+    tabStaff:       'Staff',
     total:          'Total',
     exportBtn:      '📊 Export to Sheets',
     exporting:      'Exporting...',
@@ -261,7 +301,12 @@ const T = {
     toastExportFail:'⚠️ Saved locally. Export failed.',
     toastDeleted:   'Deleted.',
     langBtn:        'ភាសាខ្មែរ',
-    depts:          { M: 'Maintenance', HK: 'Housekeeping', B: 'Service' },
+    staffNamePh:    'Staff name...',
+    staffAdd:       '+ Add',
+    staffDelConf:   'Remove this staff member?',
+    staffAdded:     '✅ Staff added.',
+    staffDupWarn:   '⚠️ Name already exists.',
+    noStaff:        'No staff registered.',
   },
   km: {
     title:          '💸 ការចំណាយ',
@@ -274,8 +319,9 @@ const T = {
     admin:          'Admin',
     back:           '←',
     tabToday:       'ថ្ងៃនេះ',
-    tabWeek:        'សប្ដាហ៍នេះ',
-    tabMonth:       'ខែនេះ',
+    tabWeek:        'សប្ដាហ៍',
+    tabMonth:       'ខែ',
+    tabStaff:       'បុគ្គលិក',
     total:          'សរុប',
     exportBtn:      '📊 Export to Sheets',
     exporting:      'កំពុង Export...',
@@ -286,7 +332,12 @@ const T = {
     toastExportFail:'⚠️ រក្សាទុកក្នុងម៉ាស៊ីន។ Export មិនបាន។',
     toastDeleted:   'បានលុប។',
     langBtn:        'English',
-    depts:          { M: 'ថែទាំ', HK: 'Housekeeping', B: 'សេវាកម្ម' },
+    staffNamePh:    'ឈ្មោះបុគ្គលិក...',
+    staffAdd:       '+ បន្ថែម',
+    staffDelConf:   'លុបបុគ្គលិកនេះ?',
+    staffAdded:     '✅ បន្ថែមបុគ្គលិករួចហើយ។',
+    staffDupWarn:   '⚠️ ឈ្មោះនេះមានរួចហើយ។',
+    noStaff:        'មិនទាន់មានបុគ្គលិក។',
   },
 };
 
@@ -297,7 +348,12 @@ let adminTab = 'month';
 let selDept  = null;
 let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
+const _savedStaff = localStorage.getItem(STAFF_STORAGE_KEY);
+let staffList = _savedStaff ? JSON.parse(_savedStaff) : DEFAULT_STAFF.map(s => ({...s}));
+
 // ── Init ─────────────────────────────────────────────────
+renderDeptButtons();
+renderNameOptions(null);
 applyLang();
 renderAdmin();
 
@@ -324,22 +380,20 @@ function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
 
 function applyLang() {
   const t = T[lang];
-  document.getElementById('hdr-title').textContent        = t.title;
-  document.getElementById('lbl-dept').textContent         = t.dept;
-  document.getElementById('lbl-name').textContent         = t.name;
-  document.getElementById('lbl-amount').textContent       = t.amount;
-  document.getElementById('dlbl-M').textContent           = t.depts.M;
-  document.getElementById('dlbl-HK').textContent          = t.depts.HK;
-  document.getElementById('dlbl-B').textContent           = t.depts.B;
-  document.getElementById('nameSelect').options[0].text   = t.namePh;
-  document.getElementById('submitBtn').textContent        = t.submit;
-  document.getElementById('adminBtn').textContent         = t.admin;
-  document.getElementById('backBtn').textContent          = t.back;
-  document.getElementById('langBtn').textContent          = t.langBtn;
-  document.getElementById('adminExportBtn').textContent   = t.exportBtn;
-  document.getElementById('tab-today').textContent        = t.tabToday;
-  document.getElementById('tab-week').textContent         = t.tabWeek;
-  document.getElementById('tab-month').textContent        = t.tabMonth;
+  document.getElementById('hdr-title').textContent      = t.title;
+  document.getElementById('lbl-dept').textContent       = t.dept;
+  document.getElementById('lbl-name').textContent       = t.name;
+  document.getElementById('lbl-amount').textContent     = t.amount;
+  document.getElementById('submitBtn').textContent      = t.submit;
+  document.getElementById('adminBtn').textContent       = t.admin;
+  document.getElementById('backBtn').textContent        = t.back;
+  document.getElementById('langBtn').textContent        = t.langBtn;
+  document.getElementById('adminExportBtn').textContent = t.exportBtn;
+  document.getElementById('tab-today').textContent      = t.tabToday;
+  document.getElementById('tab-week').textContent       = t.tabWeek;
+  document.getElementById('tab-month').textContent      = t.tabMonth;
+  document.getElementById('tab-staff').textContent      = t.tabStaff;
+  renderNameOptions(selDept);
   if (view === 'admin') renderAdmin();
 }
 
@@ -351,15 +405,79 @@ function setView(v) {
   document.getElementById('admin-view').style.display = isAdmin ? 'flex'    : 'none';
   document.getElementById('backBtn').style.visibility = isAdmin ? 'visible' : 'hidden';
   document.getElementById('adminBtn').style.display   = isAdmin ? 'none'    : '';
-  if (isAdmin) renderAdmin();
+  if (isAdmin) {
+    document.getElementById('adminExportBtn').style.display = adminTab === 'staff' ? 'none' : '';
+    renderAdmin();
+  }
 }
 
 // ── Dept ─────────────────────────────────────────────────
+function renderDeptButtons() {
+  document.getElementById('dept-row').innerHTML =
+    Object.entries(DEPT_CFG).map(([id, cfg]) => `
+      <button class="dept-btn${selDept === id ? ' sel' : ''}" data-dept="${id}"
+              style="--dept-color:${cfg.color};--dept-bg:${cfg.bg}"
+              onclick="selectDept('${id}')">
+        <span class="dept-code">${id}</span>
+        <span class="dept-lbl">${cfg.name}</span>
+      </button>
+    `).join('');
+}
+
 function selectDept(id) {
+  const prevName = document.getElementById('nameSelect').value;
   selDept = id;
-  document.querySelectorAll('.dept-btn').forEach(b =>
-    b.classList.toggle('sel', b.dataset.dept === id)
-  );
+  renderDeptButtons();
+  renderNameOptions(id);
+  if (prevName && staffList.find(s => s.name === prevName && s.dept === id)) {
+    document.getElementById('nameSelect').value = prevName;
+  }
+  updateSubmit();
+}
+
+// ── Name ─────────────────────────────────────────────────
+function renderNameOptions(deptFilter) {
+  const t   = T[lang];
+  const sel = document.getElementById('nameSelect');
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">${t.namePh}</option>`;
+
+  if (deptFilter) {
+    const names = staffList.filter(s => s.dept === deptFilter).map(s => s.name);
+    for (const name of names) {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = name;
+      sel.appendChild(opt);
+    }
+  } else {
+    for (const deptId of Object.keys(DEPT_CFG)) {
+      const names = staffList.filter(s => s.dept === deptId).map(s => s.name);
+      if (names.length === 0) continue;
+      const grp = document.createElement('optgroup');
+      grp.label = `${deptId} · ${DEPT_CFG[deptId].name}`;
+      for (const name of names) {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = name;
+        grp.appendChild(opt);
+      }
+      sel.appendChild(grp);
+    }
+  }
+
+  if (cur && Array.from(sel.options).some(o => o.value === cur)) sel.value = cur;
+}
+
+function onNameChange() {
+  const name = document.getElementById('nameSelect').value;
+  if (name) {
+    const s = staffList.find(s => s.name === name);
+    if (s && selDept !== s.dept) {
+      selDept = s.dept;
+      renderDeptButtons();
+      renderNameOptions(selDept);
+      document.getElementById('nameSelect').value = name;
+    }
+  }
   updateSubmit();
 }
 
@@ -386,7 +504,7 @@ async function handleSubmit() {
 
   const btn = document.getElementById('submitBtn');
   const t   = T[lang];
-  btn.disabled = true;
+  btn.disabled    = true;
   btn.textContent = t.submitting;
 
   const now   = new Date();
@@ -403,11 +521,10 @@ async function handleSubmit() {
   expenses.push(entry);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
 
-  // Reset form
   selDept = null;
-  document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('sel'));
-  document.getElementById('nameSelect').value = '';
-  document.getElementById('amountInp').value  = '';
+  renderDeptButtons();
+  renderNameOptions(null);
+  document.getElementById('amountInp').value = '';
   btn.textContent = t.submit;
   btn.disabled    = true;
 
@@ -453,7 +570,7 @@ async function adminExport() {
   }
 }
 
-// ── Delete ───────────────────────────────────────────────
+// ── Delete expense ───────────────────────────────────────
 async function deleteEntry(id) {
   if (!confirm(T[lang].deleteConf)) return;
   expenses = expenses.filter(e => e.id !== id);
@@ -469,11 +586,89 @@ async function deleteEntry(id) {
   } catch(e) { console.error(e); }
 }
 
+// ── Staff management ─────────────────────────────────────
+function saveStaff() {
+  localStorage.setItem(STAFF_STORAGE_KEY, JSON.stringify(staffList));
+}
+
+function addStaff() {
+  const nameEl = document.getElementById('newStaffName');
+  const deptEl = document.getElementById('newStaffDept');
+  const t      = T[lang];
+  const name   = nameEl.value.trim();
+  const dept   = deptEl.value;
+  if (!name || !dept) return;
+  if (staffList.some(s => s.name === name)) { showToast(t.staffDupWarn); return; }
+  staffList.push({ name, dept });
+  saveStaff();
+  nameEl.value = '';
+  showToast(t.staffAdded);
+  renderStaff();
+}
+
+function deleteStaff(name) {
+  if (!confirm(T[lang].staffDelConf)) return;
+  staffList = staffList.filter(s => s.name !== name);
+  saveStaff();
+  showToast(T[lang].toastDeleted);
+  renderStaff();
+}
+
+function changeStaffDept(name, newDept) {
+  const s = staffList.find(s => s.name === name);
+  if (s) { s.dept = newDept; saveStaff(); renderStaff(); }
+}
+
+function renderStaff() {
+  const t        = T[lang];
+  const deptOpts = Object.entries(DEPT_CFG)
+    .map(([id, cfg]) => `<option value="${id}">${id} · ${cfg.name}</option>`)
+    .join('');
+
+  document.getElementById('summary-area').innerHTML = `
+    <div class="staff-form">
+      <input class="staff-inp" id="newStaffName" type="text"
+             placeholder="${t.staffNamePh}"
+             onkeydown="if(event.key==='Enter')addStaff()">
+      <div class="staff-form-row">
+        <select class="staff-dept-sel" id="newStaffDept">${deptOpts}</select>
+        <button class="staff-add-btn" onclick="addStaff()">${t.staffAdd}</button>
+      </div>
+    </div>`;
+
+  const fallback = { color: '#aaa', bg: 'rgba(170,170,170,.15)' };
+  const sorted   = [];
+  for (const deptId of Object.keys(DEPT_CFG)) {
+    staffList.filter(s => s.dept === deptId)
+             .sort((a, b) => a.name.localeCompare(b.name))
+             .forEach(s => sorted.push(s));
+  }
+  staffList.filter(s => !DEPT_CFG[s.dept]).forEach(s => sorted.push(s));
+
+  document.getElementById('entry-list').innerHTML = sorted.length === 0
+    ? `<div class="empty">${t.noStaff}</div>`
+    : `<div class="elist">${sorted.map(s => {
+        const cfg = DEPT_CFG[s.dept] || fallback;
+        const opts = Object.entries(DEPT_CFG)
+          .map(([id]) => `<option value="${id}"${s.dept===id?' selected':''}>${id}</option>`)
+          .join('');
+        return `
+        <div class="sitem">
+          <div class="ebadge" style="background:${cfg.bg};color:${cfg.color}">${s.dept}</div>
+          <div class="sname">${s.name}</div>
+          <select class="sdept-sel" onchange="changeStaffDept('${s.name}',this.value)">${opts}</select>
+          <button class="edel" onclick="deleteStaff('${s.name}')">✕</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
 // ── Admin render ─────────────────────────────────────────
 function setTab(tab) {
   adminTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(`tab-${tab}`).classList.add('active');
+  document.getElementById('adminExportBtn').style.display = tab === 'staff' ? 'none' : '';
   renderAdmin();
 }
 
@@ -488,6 +683,8 @@ function getFiltered() {
 }
 
 function renderAdmin() {
+  if (adminTab === 'staff') { renderStaff(); return; }
+
   const t    = T[lang];
   const data = getFiltered();
   const total = data.reduce((s, e) => s + e.amount, 0);
@@ -503,25 +700,29 @@ function renderAdmin() {
       </div>
       ${deptKeys.map(k => `
         <div class="stat-card">
-          <div class="stat-lbl" style="color:${DEPT_CFG[k].color}">${k} · ${t.depts[k]}</div>
+          <div class="stat-lbl" style="color:${DEPT_CFG[k].color}">${k} · ${DEPT_CFG[k].name}</div>
           <div class="stat-val sm">₭ ${fmtKHR(byDept[k])}</div>
         </div>
       `).join('')}
     </div>`;
 
-  const sorted = [...data].sort((a, b) => b.ts.localeCompare(a.ts));
+  const fallback = { color: '#aaa', bg: 'rgba(170,170,170,.15)' };
+  const sorted   = [...data].sort((a, b) => b.ts.localeCompare(a.ts));
   document.getElementById('entry-list').innerHTML = sorted.length === 0
     ? `<div class="empty">${t.noEntries}</div>`
-    : `<div class="elist">${sorted.map(e => `
+    : `<div class="elist">${sorted.map(e => {
+        const cfg = DEPT_CFG[e.dept] || fallback;
+        return `
         <div class="eitem">
-          <div class="ebadge" style="background:${DEPT_CFG[e.dept].bg};color:${DEPT_CFG[e.dept].color}">${e.dept}</div>
+          <div class="ebadge" style="background:${cfg.bg};color:${cfg.color}">${e.dept}</div>
           <div class="ebody">
             <div class="ename">${e.name}</div>
             <div class="emeta">${e.date} ${e.time}</div>
           </div>
           <div class="eamt">₭ ${fmtKHR(e.amount)}</div>
           <button class="edel" onclick="deleteEntry('${e.id}')">✕</button>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
       </div>`;
 }
 
