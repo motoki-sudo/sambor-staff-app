@@ -150,6 +150,13 @@ header{
 .export-btn:disabled{opacity:.5;cursor:not-allowed}
 
 /* Reconcile */
+.reconcile-divider{
+  display:flex;align-items:center;gap:10px;margin:20px 0 4px;
+  color:var(--dim);font-size:12px;letter-spacing:.04em;
+}
+.reconcile-divider::before,.reconcile-divider::after{
+  content:'';flex:1;height:1px;background:rgba(255,255,255,.1);
+}
 .echeck{
   background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:50%;
   width:34px;height:34px;cursor:pointer;font-size:18px;flex-shrink:0;
@@ -865,15 +872,29 @@ function renderReconcile() {
     </div>`;
   };
 
-  const items = [...unverified, ...verified];
-  document.getElementById('entry-list').innerHTML = items.length === 0
-    ? `<div class="empty">${T[lang].noEntries}</div>`
-    : `<div class="elist">${items.map(renderItem).join('')}</div>`;
+  const allCount = unverified.length + verified.length;
+  let html = '';
+  if (allCount === 0) {
+    html = `<div class="empty">${T[lang].noEntries}</div>`;
+  } else {
+    html = `<div class="elist">${unverified.map(renderItem).join('')}</div>`;
+    if (unverified.length > 0 && verified.length > 0) {
+      html += `<div class="reconcile-divider"><span>✅ verified</span></div>`;
+    }
+    if (verified.length > 0) {
+      html += `<div class="elist">${verified.map(renderItem).join('')}</div>`;
+    }
+  }
+  document.getElementById('entry-list').innerHTML = html;
 }
 
 async function toggleVerified(id) {
   const target = expenses.find(e => e.id === id);
   if (!target) return;
+  if (target.verified) {
+    const ok = confirm('このチェックを外しますか？\n（verified → pending に戻ります）');
+    if (!ok) return;
+  }
   target.verified = !target.verified;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
   renderReconcile();
