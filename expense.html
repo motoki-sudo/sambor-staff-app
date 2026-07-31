@@ -191,7 +191,7 @@ header{
 
 <div id="app">
   <header>
-    <button class="hdr-btn" id="backBtn" onclick="setView('main')" style="visibility:hidden">←</button>
+    <button class="hdr-btn" id="backBtn" onclick="location.href='/'">🏠</button>
     <span class="hdr-title" id="hdr-title">💸 Expense</span>
     <div class="hdr-right">
       <button class="hdr-btn" id="adminBtn" onclick="setView('admin')">Admin</button>
@@ -404,7 +404,6 @@ function applyLang() {
   document.getElementById('lbl-amount').textContent     = t.amount;
   document.getElementById('submitBtn').textContent      = t.submit;
   document.getElementById('adminBtn').textContent       = t.admin;
-  document.getElementById('backBtn').textContent        = t.back;
   document.getElementById('langBtn').textContent        = t.langBtn;
   document.getElementById('adminExportBtn').textContent = t.exportBtn;
   document.getElementById('tab-today').textContent      = t.tabToday;
@@ -421,8 +420,10 @@ function setView(v) {
   const isAdmin = v === 'admin';
   document.getElementById('main-view').style.display  = isAdmin ? 'none'    : 'flex';
   document.getElementById('admin-view').style.display = isAdmin ? 'flex'    : 'none';
-  document.getElementById('backBtn').style.visibility = isAdmin ? 'visible' : 'hidden';
-  document.getElementById('adminBtn').style.display   = isAdmin ? 'none'    : '';
+  const backBtn = document.getElementById('backBtn');
+  backBtn.textContent = isAdmin ? '←' : '🏠';
+  backBtn.onclick     = isAdmin ? () => setView('main') : () => { location.href = '/'; };
+  document.getElementById('adminBtn').style.display = isAdmin ? 'none' : '';
   if (isAdmin) {
     document.getElementById('adminExportBtn').style.display = adminTab === 'staff' ? 'none' : '';
     renderAdmin();
