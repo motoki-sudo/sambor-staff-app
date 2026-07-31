@@ -425,12 +425,22 @@ function renderDeptButtons() {
 }
 
 function selectDept(id) {
-  const prevName = document.getElementById('nameSelect').value;
+  const prevName  = document.getElementById('nameSelect').value;
+  const prevStaff = prevName ? staffList.find(s => s.name === prevName) : null;
+  const isFO      = prevStaff?.dept === 'FO';
+
   selDept = id;
   renderDeptButtons();
-  renderNameOptions(id);
-  if (prevName && staffList.find(s => s.name === prevName && s.dept === id)) {
+
+  if (isFO) {
+    // FO staff can buy for other depts — keep name, keep showing FO names
+    renderNameOptions('FO');
     document.getElementById('nameSelect').value = prevName;
+  } else {
+    renderNameOptions(id);
+    if (prevName && staffList.find(s => s.name === prevName && s.dept === id)) {
+      document.getElementById('nameSelect').value = prevName;
+    }
   }
   updateSubmit();
 }
