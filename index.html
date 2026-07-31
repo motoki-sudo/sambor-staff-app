@@ -579,16 +579,32 @@ const TREE_STAGE_NAMES = {
 };
 
 // ── Settings helpers ──────────────────────────────────
-const SETTINGS_KEY = 'sambor-settings';
-function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'); } catch { return {}; } }
-function saveSettings(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
-function getSetting(k,d) { const s=loadSettings(); return s[k]!==undefined?s[k]:d; }
-function setSetting(k,v) { const s=loadSettings(); s[k]=v; saveSettings(s); }
-function getTreeGoal()  { return getSetting('treeGoal',  100); }
-function getCountMode() { return getSetting('countMode', 'both'); }
-function getTreeType()  { return getSetting('treeType',  'durian'); }
+let settingsCache = { treeGoal: 100, countMode: 'both', treeType: 'durian' };
+function getTreeGoal()  { return settingsCache.treeGoal; }
+function getCountMode() { return settingsCache.countMode; }
+function getTreeType()  { return settingsCache.treeType; }
 function getEffectiveTotal(state) { return getCountMode()==='walkin' ? state.walkin : state.walkin+state.hotel; }
 function getMilestones() { const g=getTreeGoal(); return [.1,.2,.3,.5].map(p=>Math.round(p*g)); }
+
+async function loadSettingsFromSupabase() {
+  try {
+    const { data, error } = await sb.from('settings').select('*').eq('id', 1).single();
+    if (error || !data) return;
+    settingsCache = { treeGoal: data.tree_goal, countMode: data.count_mode, treeType: data.tree_type };
+    renderAll();
+    loadSettingsUI();
+  } catch(e) { console.warn('settings fetch failed', e); }
+}
+
+async function saveSettingsToSupabase() {
+  try {
+    await sb.from('settings').upsert({
+      id: 1, tree_goal: settingsCache.treeGoal,
+      count_mode: settingsCache.countMode, tree_type: settingsCache.treeType,
+      updated_at: new Date().toISOString(),
+    });
+  } catch(e) { console.warn('settings save failed', e); }
+}
 
 function getStage(total) {
   const g = getTreeGoal();
@@ -717,6 +733,12 @@ function subscribeRealtime() {
         delLog.unshift(item);
         if (document.getElementById('viewAdmin').style.display !== 'none') renderLog();
       })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'settings' },
+      ({ new: s }) => {
+        settingsCache = { treeGoal: s.tree_goal, countMode: s.count_mode, treeType: s.tree_type };
+        renderAll();
+        loadSettingsUI();
+      })
     .subscribe();
 }
 
@@ -739,6 +761,7 @@ async function initSync() {
   updateSyncStatus('syncing');
   await syncPending();
   await pullFromSupabase();
+  await loadSettingsFromSupabase();
   subscribeRealtime();
   updateSyncStatus('online');
 }
@@ -759,7 +782,7 @@ window.addEventListener('offline', () => {
 function showView(v) {
   document.getElementById('viewMain').style.display  = v === 'main'  ? 'flex' : 'none';
   document.getElementById('viewAdmin').style.display = v === 'admin' ? 'flex' : 'none';
-  if (v === 'admin') { renderAll(); loadSettingsUI(); loadDelLogFromSupabase(); }
+  if (v === 'admin') { renderAll(); loadSettingsUI(); loadDelLogFromSupabase(); loadSettingsFromSupabase(); }
 }
 
 // ── Durian SVG ────────────────────────────────────────
@@ -1294,19 +1317,22 @@ function loadSettingsUI() {
 function onGoalChange(val) {
   val = Math.round(Number(val));
   document.getElementById('goalVal').textContent = val;
-  setSetting('treeGoal', val);
+  settingsCache.treeGoal = val;
+  saveSettingsToSupabase();
   renderTree();
 }
 
 function setCountMode(mode) {
-  setSetting('countMode', mode);
+  settingsCache.countMode = mode;
   document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.id === 'mode-'+mode));
+  saveSettingsToSupabase();
   renderTree();
 }
 
 function setTreeType(type) {
-  setSetting('treeType', type);
+  settingsCache.treeType = type;
   document.querySelectorAll('.tree-type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  saveSettingsToSupabase();
   renderTree();
 }
 
