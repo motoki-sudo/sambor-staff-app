@@ -328,6 +328,7 @@ const T = {
     staffAdded:     '✅ Staff added.',
     staffDupWarn:   '⚠️ Name already exists.',
     noStaff:        'No staff registered.',
+    unverifyConf:   'Uncheck this item?\n(verified → pending)',
   },
   km: {
     title:          '💸 ការចំណាយ',
@@ -359,6 +360,7 @@ const T = {
     staffAdded:     '✅ បន្ថែមបុគ្គលិករួចហើយ។',
     staffDupWarn:   '⚠️ ឈ្មោះនេះមានរួចហើយ។',
     noStaff:        'មិនទាន់មានបុគ្គលិក។',
+    unverifyConf:   'មិនយល់ព្រមលើធាតុនេះ?\n(verified → pending)',
   },
 };
 
@@ -892,7 +894,7 @@ async function toggleVerified(id) {
   const target = expenses.find(e => e.id === id);
   if (!target) return;
   if (target.verified) {
-    const ok = confirm('このチェックを外しますか？\n（verified → pending に戻ります）');
+    const ok = confirm(T[lang].unverifyConf);
     if (!ok) return;
   }
   target.verified = !target.verified;
