@@ -446,6 +446,19 @@ function selectDept(id) {
 }
 
 // ── Name ─────────────────────────────────────────────────
+function appendNamesToGroup(sel, deptId, label) {
+  const names = staffList.filter(s => s.dept === deptId).map(s => s.name);
+  if (names.length === 0) return;
+  const grp = document.createElement('optgroup');
+  grp.label = label;
+  for (const name of names) {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = name;
+    grp.appendChild(opt);
+  }
+  sel.appendChild(grp);
+}
+
 function renderNameOptions(deptFilter) {
   const t   = T[lang];
   const sel = document.getElementById('nameSelect');
@@ -453,24 +466,22 @@ function renderNameOptions(deptFilter) {
   sel.innerHTML = `<option value="">${t.namePh}</option>`;
 
   if (deptFilter) {
-    const names = staffList.filter(s => s.dept === deptFilter).map(s => s.name);
-    for (const name of names) {
-      const opt = document.createElement('option');
-      opt.value = opt.textContent = name;
-      sel.appendChild(opt);
-    }
-  } else {
-    for (const deptId of Object.keys(DEPT_CFG)) {
-      const names = staffList.filter(s => s.dept === deptId).map(s => s.name);
-      if (names.length === 0) continue;
-      const grp = document.createElement('optgroup');
-      grp.label = `${deptId} · ${DEPT_CFG[deptId].name}`;
+    if (deptFilter === 'FO') {
+      // FO only
+      const names = staffList.filter(s => s.dept === 'FO').map(s => s.name);
       for (const name of names) {
         const opt = document.createElement('option');
         opt.value = opt.textContent = name;
-        grp.appendChild(opt);
+        sel.appendChild(opt);
       }
-      sel.appendChild(grp);
+    } else {
+      // Non-FO dept: show FO staff first (they can buy for any dept), then the dept's own staff
+      appendNamesToGroup(sel, 'FO', `FO · ${DEPT_CFG['FO'].name}`);
+      appendNamesToGroup(sel, deptFilter, `${deptFilter} · ${DEPT_CFG[deptFilter].name}`);
+    }
+  } else {
+    for (const deptId of Object.keys(DEPT_CFG)) {
+      appendNamesToGroup(sel, deptId, `${deptId} · ${DEPT_CFG[deptId].name}`);
     }
   }
 
@@ -481,11 +492,21 @@ function onNameChange() {
   const name = document.getElementById('nameSelect').value;
   if (name) {
     const s = staffList.find(s => s.name === name);
-    if (s && selDept !== s.dept) {
-      selDept = s.dept;
-      renderDeptButtons();
-      renderNameOptions(selDept);
-      document.getElementById('nameSelect').value = name;
+    if (s) {
+      if (s.dept === 'FO') {
+        // FO staff: only auto-select FO when no dept is chosen yet; otherwise keep current dept
+        if (!selDept) {
+          selDept = 'FO';
+          renderDeptButtons();
+          renderNameOptions('FO');
+          document.getElementById('nameSelect').value = name;
+        }
+      } else if (selDept !== s.dept) {
+        selDept = s.dept;
+        renderDeptButtons();
+        renderNameOptions(selDept);
+        document.getElementById('nameSelect').value = name;
+      }
     }
   }
   updateSubmit();
