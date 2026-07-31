@@ -149,6 +149,16 @@ header{
 .export-btn:not(:disabled):active{background:rgba(66,133,244,.22)}
 .export-btn:disabled{opacity:.5;cursor:not-allowed}
 
+/* Reconcile */
+.echeck{
+  background:none;border:1.5px solid rgba(255,255,255,.2);border-radius:50%;
+  width:34px;height:34px;cursor:pointer;font-size:18px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:transparent;transition:.15s;
+}
+.echeck:active{background:rgba(255,255,255,.1)}
+.eitem.verified{opacity:.45}
+.eitem.verified .echeck{background:rgba(16,185,129,.2);border-color:#10b981;color:#10b981}
+
 /* Staff management */
 .staff-form{display:flex;flex-direction:column;gap:8px}
 .staff-inp{
@@ -195,6 +205,7 @@ header{
     <span class="hdr-title" id="hdr-title">💸 Expense</span>
     <div class="hdr-right">
       <button class="hdr-btn" id="adminBtn" onclick="setView('admin')">Admin</button>
+      <button class="hdr-btn" id="staffBtn" style="display:none" onclick="setTab('staff')">👥</button>
       <button class="hdr-btn" id="langBtn" onclick="toggleLang()">ភាសាខ្មែរ</button>
     </div>
   </header>
@@ -228,10 +239,10 @@ header{
   <!-- Admin view -->
   <div id="admin-view" class="content" style="display:none">
     <div class="tab-row">
-      <button class="tab-btn" id="tab-today" onclick="setTab('today')">Today</button>
-      <button class="tab-btn" id="tab-week"  onclick="setTab('week')">Week</button>
+      <button class="tab-btn" id="tab-today"     onclick="setTab('today')">Today</button>
+      <button class="tab-btn" id="tab-week"      onclick="setTab('week')">Week</button>
       <button class="tab-btn active" id="tab-month" onclick="setTab('month')">Month</button>
-      <button class="tab-btn" id="tab-staff" onclick="setTab('staff')">Staff</button>
+      <button class="tab-btn" id="tab-reconcile" onclick="setTab('reconcile')">Reconcile</button>
     </div>
     <div id="summary-area"></div>
     <div id="entry-list"></div>
@@ -293,7 +304,7 @@ const T = {
     tabToday:       'Today',
     tabWeek:        'Week',
     tabMonth:       'Month',
-    tabStaff:       'Staff',
+    tabReconcile:   'Reconcile',
     total:          'Total',
     exportBtn:      '📊 Export to Sheets',
     exporting:      'Exporting...',
@@ -324,7 +335,7 @@ const T = {
     tabToday:       'ថ្ងៃនេះ',
     tabWeek:        'សប្ដាហ៍',
     tabMonth:       'ខែ',
-    tabStaff:       'បុគ្គលិក',
+    tabReconcile:   'ពិនិត្យ',
     total:          'សរុប',
     exportBtn:      '📊 Export to Sheets',
     exporting:      'កំពុង Export...',
@@ -410,7 +421,7 @@ function applyLang() {
   document.getElementById('tab-today').textContent      = t.tabToday;
   document.getElementById('tab-week').textContent       = t.tabWeek;
   document.getElementById('tab-month').textContent      = t.tabMonth;
-  document.getElementById('tab-staff').textContent      = t.tabStaff;
+  document.getElementById('tab-reconcile').textContent  = t.tabReconcile;
   renderNameOptions(selDept);
   if (view === 'admin') renderAdmin();
 }
@@ -424,9 +435,10 @@ function setView(v) {
   const backBtn = document.getElementById('backBtn');
   backBtn.textContent = isAdmin ? '←' : '🏠';
   backBtn.onclick     = isAdmin ? () => setView('main') : () => { location.href = '/'; };
-  document.getElementById('adminBtn').style.display = isAdmin ? 'none' : '';
+  document.getElementById('adminBtn').style.display  = isAdmin ? 'none' : '';
+  document.getElementById('staffBtn').style.display  = isAdmin ? '' : 'none';
   if (isAdmin) {
-    document.getElementById('adminExportBtn').style.display = adminTab === 'staff' ? 'none' : '';
+    document.getElementById('adminExportBtn').style.display = (adminTab === 'staff' || adminTab === 'reconcile') ? 'none' : '';
     renderAdmin();
     loadExpenses();
     loadExpDelLog();
@@ -748,8 +760,9 @@ function renderStaff() {
 function setTab(tab) {
   adminTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(`tab-${tab}`).classList.add('active');
-  document.getElementById('adminExportBtn').style.display = tab === 'staff' ? 'none' : '';
+  const tabEl = document.getElementById(`tab-${tab}`);
+  if (tabEl) tabEl.classList.add('active');
+  document.getElementById('adminExportBtn').style.display = (tab === 'staff' || tab === 'reconcile') ? 'none' : '';
   renderAdmin();
 }
 
@@ -757,14 +770,16 @@ function getFiltered() {
   const today = localDate();
   const ws    = weekStart();
   const ms    = monthStart();
+  const tab   = adminTab === 'reconcile' ? 'month' : adminTab;
   return expenses.filter(e =>
-    adminTab === 'today' ? e.date === today :
-    adminTab === 'week'  ? e.date >= ws     : e.date >= ms
+    tab === 'today' ? e.date === today :
+    tab === 'week'  ? e.date >= ws     : e.date >= ms
   );
 }
 
 function renderAdmin() {
-  if (adminTab === 'staff') { renderStaff(); return; }
+  if (adminTab === 'staff')     { renderStaff();     return; }
+  if (adminTab === 'reconcile') { renderReconcile(); return; }
 
   const t    = T[lang];
   const data = getFiltered();
@@ -821,6 +836,57 @@ function renderAdmin() {
         </div>`;
       }).join('')}
       </div>`;
+}
+
+// ── Reconcile ───────────────────────────────────────────
+function renderReconcile() {
+  const data       = getFiltered();
+  const unverified = data.filter(e => !e.verified);
+  const verified   = data.filter(e => e.verified);
+  const fallback   = { color: '#aaa', bg: 'rgba(170,170,170,.15)' };
+
+  document.getElementById('summary-area').innerHTML = `
+    <div style="display:flex;gap:20px;padding:8px 0;font-size:14px;color:var(--dim)">
+      <span>⏳ <strong style="color:var(--text)">${unverified.length}</strong> pending</span>
+      <span>✅ <strong style="color:var(--text)">${verified.length}</strong> verified</span>
+    </div>`;
+
+  const renderItem = e => {
+    const cfg = DEPT_CFG[e.dept] || fallback;
+    return `
+    <div class="eitem${e.verified ? ' verified' : ''}">
+      <div class="ebadge" style="background:${cfg.bg};color:${cfg.color}">${e.dept}</div>
+      <div class="ebody">
+        <div class="ename">${e.name}</div>
+        <div class="emeta">${e.date} ${e.time}</div>
+      </div>
+      <div class="eamt">₭ ${fmtKHR(e.amount)}</div>
+      <button class="echeck" onclick="toggleVerified('${e.id}')">✓</button>
+    </div>`;
+  };
+
+  const items = [...unverified, ...verified];
+  document.getElementById('entry-list').innerHTML = items.length === 0
+    ? `<div class="empty">${T[lang].noEntries}</div>`
+    : `<div class="elist">${items.map(renderItem).join('')}</div>`;
+}
+
+async function toggleVerified(id) {
+  const target = expenses.find(e => e.id === id);
+  if (!target) return;
+  target.verified = !target.verified;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  renderReconcile();
+  try {
+    await fetch(`${SB_URL}/rest/v1/expenses?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ verified: target.verified }),
+    });
+  } catch(e) { console.error('verify update failed', e); }
 }
 
 // ── Toast ────────────────────────────────────────────────
