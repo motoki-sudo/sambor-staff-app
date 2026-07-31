@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
       s.properties.title === 'シート2'
     ) || info.sheets[1] || info.sheets[0];
     const sheetName    = target.properties.title;
-    const encodedRange = encodeURIComponent(`${sheetName}!A:F`);
+    const encodedRange = encodeURIComponent(`${sheetName}!A:G`);
 
     // Clear Sheet2
     await fetch(
@@ -79,13 +79,14 @@ module.exports = async function handler(req, res) {
 
     // Write header + data
     const values = [
-      ['Date', 'Time', 'Department', 'Name', 'Amount (KHR)'],
+      ['Date', 'Time', 'Department', 'Name', 'Amount (KHR)', 'Verified'],
       ...entries.map(e => [
-        e.date   || '',
-        e.time   || '',
-        e.dept   || '',
-        e.name   || '',
-        e.amount || 0,
+        e.date     || '',
+        e.time     || '',
+        e.dept     || '',
+        e.name     || '',
+        e.amount   || 0,
+        e.verified ? '✅' : '⏳',
       ]),
     ];
 
