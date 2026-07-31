@@ -231,6 +231,29 @@
 
   .log-list::-webkit-scrollbar { width: 4px; }
   .log-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 2px; }
+
+  /* ── Tree Settings ── */
+  .setting-row { margin-bottom: 18px; }
+  .setting-row:last-child { margin-bottom: 0; }
+  .setting-lbl { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .goal-range {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
+    background: rgba(201,168,76,.2); border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .goal-range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--gold); cursor: pointer;
+  }
+  .goal-val { font-size: 20px; font-weight: 700; color: var(--gold-lt); min-width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
+  .toggle-row { display: flex; gap: 6px; }
+  .mode-btn, .tree-type-btn {
+    flex: 1; padding: 8px 6px; border: 1px solid rgba(201,168,76,.2); border-radius: 8px;
+    background: transparent; color: var(--muted); font-size: 11px; font-weight: 500;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; text-align: center;
+  }
+  .mode-btn.active, .tree-type-btn.active { background: rgba(201,168,76,.15); border-color: var(--gold); color: var(--gold-lt); }
+  .mode-btn:active, .tree-type-btn:active { opacity: .7; }
+  .tree-type-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
 </style>
 </head>
 <body>
@@ -257,13 +280,13 @@
       <div class="tree-stats">
         <div class="tree-progress-row">
           <span class="tree-current" id="treeCurrent">0</span>
-          <span class="tree-max">/100</span>
+          <span class="tree-max" id="treeMax">/100</span>
         </div>
         <div class="tree-num-label" id="treeNumLabel">Tree #1</div>
         <div class="tree-breakdown">
           <span>🚶 <span id="treeWalkin">0</span></span>
           <span style="color:var(--muted)">·</span>
-          <span>🏨 <span id="treeHotel">0</span></span>
+          <span id="breakdown-hotel">🏨 <span id="treeHotel">0</span></span>
         </div>
         <div class="tree-stage" id="treeStage"></div>
       </div>
@@ -353,6 +376,41 @@
     </div>
 
     <button class="danger-btn" onclick="confirmNewTree()" id="lbl-new-tree">Start new tree</button>
+
+    <div class="card">
+      <div class="section-label" id="lbl-tree-settings">Tree Settings</div>
+
+      <div class="setting-row">
+        <div class="setting-lbl" id="lbl-goal">Completion goal</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <input type="range" class="goal-range" id="goalRange" min="20" max="300" step="10"
+                 oninput="onGoalChange(this.value)">
+          <span class="goal-val" id="goalVal">100</span>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px" id="lbl-goal-hint">
+          Stages unlock at 10% · 20% · 30% · 50% · 100% of goal
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-lbl" id="lbl-count-mode">Counts toward tree</div>
+        <div class="toggle-row">
+          <button id="mode-both"   class="mode-btn" onclick="setCountMode('both')"  >Walk-in + Hotel</button>
+          <button id="mode-walkin" class="mode-btn" onclick="setCountMode('walkin')">Walk-in only</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-lbl" id="lbl-tree-type">Tree type</div>
+        <div class="tree-type-grid">
+          <button class="tree-type-btn" data-type="durian"     onclick="setTreeType('durian')"    >🌳 Durian</button>
+          <button class="tree-type-btn" data-type="lychee"     onclick="setTreeType('lychee')"    >🔴 Lychee</button>
+          <button class="tree-type-btn" data-type="mango"      onclick="setTreeType('mango')"     >🥭 Mango</button>
+          <button class="tree-type-btn" data-type="mangosteen" onclick="setTreeType('mangosteen')">🟣 Mangosteen</button>
+          <button class="tree-type-btn" data-type="pineapple"  onclick="setTreeType('pineapple')" >🍍 Pineapple</button>
+        </div>
+      </div>
+    </div>
 
   </div><!-- /viewAdmin -->
 
@@ -444,7 +502,6 @@ let lang = 'en';
 function toggleLang() { lang = lang === 'en' ? 'km' : 'en'; applyLang(); }
 function applyLang() {
   const t = T[lang];
-  document.getElementById('lbl-tree').textContent        = t.tree;
   document.getElementById('lbl-type').textContent        = t.type;
   document.getElementById('lbl-walkin-btn').textContent  = t.walkinBtn;
   document.getElementById('lbl-walkin-sub').textContent  = t.walkinSub;
@@ -472,7 +529,6 @@ function applyLang() {
 
 // ── Config ────────────────────────────────────────────
 const ROOMS      = [...Array.from({length:12},(_,i)=>String(i+1)), ...Array.from({length:7},(_,i)=>String(i+14))];
-const MILESTONES = [10, 20, 30, 50];
 
 const DURIAN_POS = [
   [210, 112, 0.85], [254, 118, 0.90], [172, 138, 0.75],
@@ -483,12 +539,47 @@ const DURIAN_POS = [
 ];
 const STAGE_COUNTS = [0, 3, 5, 7, 10, 12];
 
+// ── Tree / settings data ──────────────────────────────
+const TREE_NAMES = {
+  en: { durian:'Durian Tree', lychee:'Lychee Tree', mango:'Mango Tree', mangosteen:'Mangosteen Tree', pineapple:'Pineapple' },
+  km: { durian:'ដើម Durian',  lychee:'ដើម Lychee',  mango:'ដើម Mango',  mangosteen:'ដើម Mangosteen',  pineapple:'ម្នាស់' },
+};
+const TREE_STAGE_NAMES = {
+  en: {
+    durian:     ['Waiting 🌳','First durians 🟢','Growing 🟢','Turning yellow 🟡','Almost ripe! 💛','Durian season! 🎉'],
+    lychee:     ['Waiting 🌳','First lychees 🟢','Growing 🟢','Turning pink 🩷',   'Almost ripe! ❤️','Lychee season! 🎉'],
+    mango:      ['Waiting 🌳','First mangos 🟢', 'Growing 🟢','Turning yellow 🟡','Almost ripe! 💛','Mango season! 🎉'],
+    mangosteen: ['Waiting 🌳','Budding 🟢',       'Growing 🟢','Darkening 💜',     'Almost ripe! 💜','Mangosteen season! 🎉'],
+    pineapple:  ['Waiting 🌳','Sprouting 🟢',     'Growing 🟢','Yellowing 🟡',     'Almost ripe! 💛','Pineapple season! 🎉'],
+  },
+  km: {
+    durian:     ['រង់ចាំ 🌳','ចេញ Durian 🟢','ធំឡើង 🟢','ចាប់ 🟡','ជិតទុំ! 💛','ទុំ! 🎉'],
+    lychee:     ['រង់ចាំ 🌳','ចេញ Lychee 🟢','ធំឡើង 🟢','ផ្លែ 🩷', 'ជិតទុំ! ❤️','ទុំ! 🎉'],
+    mango:      ['រង់ចាំ 🌳','ចេញ Mango 🟢', 'ធំឡើង 🟢','ចាប់ 🟡','ជិតទុំ! 💛','ទុំ! 🎉'],
+    mangosteen: ['រង់ចាំ 🌳','ចេញ 🟢',        'ធំឡើង 🟢','💜',     'ជិតទុំ! 💜','ទុំ! 🎉'],
+    pineapple:  ['រង់ចាំ 🌳','ចេញ Pineapple 🟢','ធំឡើង 🟢','ចាប់ 🟡','ជិតទុំ! 💛','ទុំ! 🎉'],
+  },
+};
+
+// ── Settings helpers ──────────────────────────────────
+const SETTINGS_KEY = 'sambor-settings';
+function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'); } catch { return {}; } }
+function saveSettings(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
+function getSetting(k,d) { const s=loadSettings(); return s[k]!==undefined?s[k]:d; }
+function setSetting(k,v) { const s=loadSettings(); s[k]=v; saveSettings(s); }
+function getTreeGoal()  { return getSetting('treeGoal',  100); }
+function getCountMode() { return getSetting('countMode', 'both'); }
+function getTreeType()  { return getSetting('treeType',  'durian'); }
+function getEffectiveTotal(state) { return getCountMode()==='walkin' ? state.walkin : state.walkin+state.hotel; }
+function getMilestones() { const g=getTreeGoal(); return [.1,.2,.3,.5].map(p=>Math.round(p*g)); }
+
 function getStage(total) {
-  if (total >= 100) return 5;
-  if (total >= 50)  return 4;
-  if (total >= 30)  return 3;
-  if (total >= 20)  return 2;
-  if (total >= 10)  return 1;
+  const g = getTreeGoal();
+  if (total >= g*.99) return 5;
+  if (total >= g*.50) return 4;
+  if (total >= g*.30) return 3;
+  if (total >= g*.20) return 2;
+  if (total >= g*.10) return 1;
   return 0;
 }
 
@@ -630,7 +721,7 @@ window.addEventListener('offline', () => {
 function showView(v) {
   document.getElementById('viewMain').style.display  = v === 'main'  ? 'flex' : 'none';
   document.getElementById('viewAdmin').style.display = v === 'admin' ? 'flex' : 'none';
-  if (v === 'admin') renderAll();
+  if (v === 'admin') { renderAll(); loadSettingsUI(); }
 }
 
 // ── Durian SVG ────────────────────────────────────────
@@ -658,12 +749,76 @@ function makeDurian(cx, cy, s, stage) {
   </g>`;
 }
 
+function makeLychee(cx, cy, s, stage) {
+  const cols = ['#5a9a28','#c04848','#cc5050','#d45858','#e06060','#f07070'];
+  const col = cols[stage], r = 11*s;
+  let bumps = '';
+  for (let i=0;i<7;i++){const a=(i/7)*Math.PI*2;bumps+=`<circle cx="${cx+r*.75*Math.cos(a)}" cy="${cy+r*.75*Math.sin(a)}" r="${2*s}" fill="${col}" opacity=".55"/>`;}
+  return `<g>${bumps}<circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}"/>
+    <ellipse cx="${cx-r*.3}" cy="${cy-r*.35}" rx="${r*.32}" ry="${r*.22}" fill="rgba(255,255,255,.25)"/>
+    <line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy-r-7*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5,2*s)}" stroke-linecap="round"/>
+  </g>`;
+}
+
+function makeMango(cx, cy, s, stage) {
+  const cols = ['#2d6a1e','#3a7a22','#5a8820','#8a9820','#c8a020','#e89020'];
+  const col = cols[stage], rx=10*s, ry=16*s;
+  return `<g transform="rotate(-20,${cx},${cy})">
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${col}"/>
+    <ellipse cx="${cx-rx*.35}" cy="${cy-ry*.3}" rx="${rx*.3}" ry="${ry*.18}" fill="rgba(255,255,255,.22)"/>
+    <line x1="${cx}" y1="${cy-ry}" x2="${cx+2*s}" y2="${cy-ry-6*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5,2*s)}" stroke-linecap="round" transform="rotate(20,${cx},${cy-ry})"/>
+  </g>`;
+}
+
+function makeMangosteen(cx, cy, s, stage) {
+  const cols = ['#3a6e15','#2d5a3a','#2a4860','#382860','#4a2070','#601888'];
+  const col = cols[stage], r=12*s;
+  let crown='';
+  for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2-Math.PI/2;crown+=`<ellipse cx="${cx+r*.55*Math.cos(a)}" cy="${cy+r*.55*Math.sin(a)+r*.2}" rx="${2.5*s}" ry="${2*s}" fill="${col}" opacity=".75"/>`;}
+  return `<g>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${col}"/>
+    <ellipse cx="${cx-r*.3}" cy="${cy-r*.3}" rx="${r*.28}" ry="${r*.2}" fill="rgba(255,255,255,.22)"/>
+    ${crown}
+    <line x1="${cx}" y1="${cy-r}" x2="${cx}" y2="${cy-r-7*s}" stroke="#5c3d11" stroke-width="${Math.max(1.5,2*s)}" stroke-linecap="round"/>
+  </g>`;
+}
+
+function makePineapple(cx, cy, s, stage) {
+  const cols = ['#2d6a1e','#3a7822','#5a8820','#8a9a20','#c8a820','#e8c020'];
+  const col = cols[stage], rx=10*s, ry=16*s;
+  let lines='';
+  for(let i=-1;i<=1;i++){
+    lines+=`<line x1="${cx+i*rx*.5}" y1="${cy-ry*.7}" x2="${cx+(i+1)*rx*.5}" y2="${cy+ry*.7}" stroke="rgba(0,0,0,.18)" stroke-width="${1.5*s}"/>`;
+    lines+=`<line x1="${cx+(i+1)*rx*.5}" y1="${cy-ry*.7}" x2="${cx+i*rx*.5}" y2="${cy+ry*.7}" stroke="rgba(0,0,0,.18)" stroke-width="${1.5*s}"/>`;
+  }
+  let leaves='';
+  for(let i=0;i<5;i++){const a=((i/4)-.5)*1.1-Math.PI/2;leaves+=`<line x1="${cx}" y1="${cy-ry}" x2="${cx+13*s*Math.cos(a)}" y2="${cy-ry+13*s*Math.sin(a)}" stroke="#2a6a10" stroke-width="${2.5*s}" stroke-linecap="round"/>`;}
+  return `<g>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${col}"/>
+    ${lines}
+    <ellipse cx="${cx-rx*.3}" cy="${cy-ry*.3}" rx="${rx*.28}" ry="${ry*.18}" fill="rgba(255,255,255,.15)"/>
+    ${leaves}
+  </g>`;
+}
+
+function makeFruit(cx, cy, s, stage, type) {
+  switch(type) {
+    case 'lychee':     return makeLychee(cx, cy, s, stage);
+    case 'mango':      return makeMango(cx, cy, s, stage);
+    case 'mangosteen': return makeMangosteen(cx, cy, s, stage);
+    case 'pineapple':  return makePineapple(cx, cy, s, stage);
+    default:           return makeDurian(cx, cy, s, stage);
+  }
+}
+
 function renderTree(overrideEntries) {
   const { entries } = loadData();
-  const state = computeTreeState(overrideEntries ?? entries);
-  const total = state.walkin + state.hotel;
-  const stage = getStage(total);
-  const t     = T[lang];
+  const state    = computeTreeState(overrideEntries ?? entries);
+  const total    = getEffectiveTotal(state);
+  const stage    = getStage(total);
+  const treeType = getTreeType();
+  const t        = T[lang];
+  const stageNames = TREE_STAGE_NAMES[lang]?.[treeType] || t.stageNames;
 
   let html = '';
   html += `<ellipse cx="220" cy="275" rx="76" ry="7" fill="#0a1a08" opacity="0.55"/>`;
@@ -682,14 +837,17 @@ function renderTree(overrideEntries) {
   html += `<circle cx="220" cy="118" r="50" fill="#2a7e15"/>`;
   for (let i = 0; i < STAGE_COUNTS[stage]; i++) {
     const [dx, dy, ds] = DURIAN_POS[i];
-    html += makeDurian(dx, dy, ds, stage);
+    html += makeFruit(dx, dy, ds, stage, treeType);
   }
-  document.getElementById('treeSvg').innerHTML = html;
+  document.getElementById('treeSvg').innerHTML        = html;
   document.getElementById('treeCurrent').textContent  = total;
+  document.getElementById('treeMax').textContent      = `/${getTreeGoal()}`;
   document.getElementById('treeNumLabel').textContent = t.treeNumLabel(state.num);
   document.getElementById('treeWalkin').textContent   = state.walkin;
   document.getElementById('treeHotel').textContent    = state.hotel;
-  document.getElementById('treeStage').textContent    = t.stageNames[stage];
+  document.getElementById('treeStage').textContent    = stageNames[stage];
+  document.getElementById('breakdown-hotel').style.opacity = getCountMode()==='walkin' ? '.3' : '1';
+  document.getElementById('lbl-tree').textContent     = TREE_NAMES[lang]?.[treeType] || t.tree;
 }
 
 // ── Stats ─────────────────────────────────────────────
@@ -818,7 +976,7 @@ function resetForm() {
 async function handleSubmit() {
   const data = loadData();
   const prevState = computeTreeState(data.entries);
-  const prevTotal = prevState.walkin + prevState.hotel;
+  const prevTotal = getEffectiveTotal(prevState);
   const today = localDate(new Date());
   const time  = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
   const ts    = Date.now();
@@ -829,9 +987,9 @@ async function handleSubmit() {
   data.pending.push(ts);
 
   const newState = computeTreeState(data.entries);
-  const newTotal = newState.walkin + newState.hotel;
+  const newTotal = getEffectiveTotal(newState);
 
-  if (newTotal >= 100) {
+  if (newTotal >= getTreeGoal()) {
     const completedNum = newState.num;
     const cTs    = ts + 1;
     const cEntry = { type: 'completion', count: 0, date: today, time, ts: cTs };
@@ -857,7 +1015,7 @@ async function handleSubmit() {
       ? t.toastWalkin(guestCount)
       : t.toastStaying(guestCount, selectedRoom));
 
-    if (MILESTONES.some(m => newTotal>=m && prevTotal<m)) {
+    if (getMilestones().some(m => newTotal>=m && prevTotal<m)) {
       setTimeout(() => { showToast(t.toastMile(newTotal)); launchConfetti(); }, 700);
     }
     resetForm();
@@ -919,6 +1077,34 @@ async function confirmNewTree() {
   saveData(data);
   resetForm(); checkSubmit(); renderAll();
   syncEntry(entry);
+}
+
+// ── Tree settings UI ──────────────────────────────────
+function loadSettingsUI() {
+  const goal = getTreeGoal(), mode = getCountMode(), type = getTreeType();
+  const rangeEl = document.getElementById('goalRange');
+  if (rangeEl) { rangeEl.value = goal; document.getElementById('goalVal').textContent = goal; }
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.id === 'mode-'+mode));
+  document.querySelectorAll('.tree-type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+}
+
+function onGoalChange(val) {
+  val = Math.round(Number(val));
+  document.getElementById('goalVal').textContent = val;
+  setSetting('treeGoal', val);
+  renderTree();
+}
+
+function setCountMode(mode) {
+  setSetting('countMode', mode);
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.id === 'mode-'+mode));
+  renderTree();
+}
+
+function setTreeType(type) {
+  setSetting('treeType', type);
+  document.querySelectorAll('.tree-type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  renderTree();
 }
 
 // ── Toast ─────────────────────────────────────────────
